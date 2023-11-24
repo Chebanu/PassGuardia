@@ -1,0 +1,17 @@
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\bin\Debug\net8.0\PassGuardia.Domain.deps.json
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\bin\Debug\net8.0\PassGuardia.Domain.runtimeconfig.json
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\bin\Debug\net8.0\PassGuardia.Domain.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\bin\Debug\net8.0\PassGuardia.Domain.pdb
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\bin\Debug\net8.0\PassGuardia.Contracts.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\bin\Debug\net8.0\PassGuardia.Contracts.pdb
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.csproj.AssemblyReference.cache
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.AssemblyInfoInputs.cache
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.AssemblyInfo.cs
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.csproj.CoreCompileInputs.cache
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.csproj.CopyComplete
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\refint\PassGuardia.Domain.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.pdb
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.genruntimeconfig.cache
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\ref\PassGuardia.Domain.dll
