@@ -16,8 +16,8 @@ namespace PassGuardia.Domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EncryptedPassword = table.Column<string>(type: "text", nullable: false),
-                    IV = table.Column<string>(type: "text", nullable: false)
+                    EncryptedPassword = table.Column<byte[]>(type: "bytea", nullable: false),
+                    IV = table.Column<byte[]>(type: "bytea", nullable: false)
                 },
                 constraints: table =>
                 {

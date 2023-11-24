@@ -9,3 +9,4 @@ C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Contracts\obj\Debug\n
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Contracts\obj\Debug\net8.0\refint\PassGuardia.Contracts.dll
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Contracts\obj\Debug\net8.0\PassGuardia.Contracts.pdb
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Contracts\obj\Debug\net8.0\ref\PassGuardia.Contracts.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Contracts\obj\Debug\net8.0\PassGuardia.Contracts.sourcelink.json

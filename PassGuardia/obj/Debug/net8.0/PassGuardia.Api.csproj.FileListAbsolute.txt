@@ -108,3 +108,4 @@ C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia\bin\Debug\net8.0\zh-H
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia\bin\Debug\net8.0\Npgsql.dll
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia\obj\Debug\net8.0\PassGuardia.Api.sourcelink.json

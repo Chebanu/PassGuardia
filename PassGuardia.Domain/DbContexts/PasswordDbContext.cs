@@ -12,7 +12,7 @@ public class PasswordDbContext : DbContext
     public PasswordDbContext(IConfiguration configuration,DbContextOptions dbContextOptions) : base(dbContextOptions)
     {
         Configuration = configuration;
-    }    
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

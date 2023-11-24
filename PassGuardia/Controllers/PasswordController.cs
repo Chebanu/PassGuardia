@@ -43,7 +43,7 @@ public class PasswordController : ControllerBase
 
         CreatePasswordResult result = await _mediator.Send(command, cancellationToken);
 
-        return Created($"tasks/{result.Id}", new CreatePasswordResult
+        return Created($"password/{result.Id}", new CreatePasswordResult
         {
             Id = result.Id
         });

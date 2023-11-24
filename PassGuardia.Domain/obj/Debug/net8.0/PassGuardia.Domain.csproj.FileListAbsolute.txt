@@ -15,3 +15,4 @@ C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.pdb
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.genruntimeconfig.cache
 C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\ref\PassGuardia.Domain.dll
+C:\Users\0alex\Desktop\PassGuardia\PassGuardia\PassGuardia.Domain\obj\Debug\net8.0\PassGuardia.Domain.sourcelink.json

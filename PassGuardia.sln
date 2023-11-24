@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.Api", "PassGuardia\PassGuardia.Api.csproj", "{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Api", "PassGuardia\PassGuardia.Api.csproj", "{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.Domain", "PassGuardia.Domain\PassGuardia.Domain.csproj", "{DFE3930C-8030-48FE-B222-80A907E98C00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Domain", "PassGuardia.Domain\PassGuardia.Domain.csproj", "{DFE3930C-8030-48FE-B222-80A907E98C00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.Contracts", "PassGuardia.Contracts\PassGuardia.Contracts.csproj", "{E4CC2045-6A6F-4BA5-B5CB-79B7C785A457}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Contracts", "PassGuardia.Contracts\PassGuardia.Contracts.csproj", "{E4CC2045-6A6F-4BA5-B5CB-79B7C785A457}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

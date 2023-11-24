@@ -17,7 +17,7 @@ internal static class DataHandler
         }
     }
 
-    public static byte[] DataReader()
+    public static byte[]? DataReader()
     {
         try
         {

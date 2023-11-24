@@ -28,7 +28,7 @@ internal class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordC
     {
        var password = SymmentricAlgorithm.CreatePassword(request.Password);
 
-        _ = await _repository.CreatePassword(password.EncryptedPassword, password.IV, default);
+        _ = await _repository.CreatePassword(password, default);
 
         return new CreatePasswordResult
         {

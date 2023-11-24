@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PassGuardia.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8f8487689e09dbd526ff187933e1171ee209342")]
 [assembly: System.Reflection.AssemblyProductAttribute("PassGuardia.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PassGuardia.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

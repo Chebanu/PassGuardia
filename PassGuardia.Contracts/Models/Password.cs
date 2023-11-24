@@ -7,7 +7,7 @@ public class Password
     [Key]
     public Guid Id { get; set; }
     [Required]
-    public string EncryptedPassword { get; set; }
+    public byte[] EncryptedPassword { get; set; }
     [Required]
-    public string IV { get; set; }
+    public byte[] IV { get; set; }
 }

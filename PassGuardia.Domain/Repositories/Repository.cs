@@ -6,7 +6,7 @@ namespace PassGuardia.Domain.Repositories;
 
 public interface IRepository
 {
-    Task<Password> CreatePassword(string hashedPassword, string iv, CancellationToken cancellationToken = default);
+    Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default);
     Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default);
 }
 
@@ -19,23 +19,23 @@ public class Repository : IRepository
         _dbPassword = dbPassword;
     }
 
-    public async Task<Password> CreatePassword(string hashedPassword, string iv, CancellationToken cancellationToken = default)
+    public async Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default)
     {
-        var password = new Password
-        {
-            Id = Guid.NewGuid(),
-            EncryptedPassword = hashedPassword,
-            IV = iv
-        };
-
         await _dbPassword.Passwords.AddAsync(password, cancellationToken);
         await _dbPassword.SaveChangesAsync(cancellationToken);
 
         return password;
     }
 
-    public Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default)
     {
-        return _dbPassword.Passwords.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
+        var password= await _dbPassword.Passwords.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
+
+        if(password == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        return password;
     }
 }

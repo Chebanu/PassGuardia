@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using PassGuardia.Contracts.Models;
+﻿using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,41 +38,12 @@ internal static class SymmentricAlgorithm
         var hashedPassword = new Password()
         {
             Id = Guid.NewGuid(),
-            EncryptedPassword = Encoding.UTF8.GetString(encrypted),
-            IV = Encoding.UTF8.GetString(iv)
+            EncryptedPassword = encrypted,
+            IV = iv
         };
 
         return hashedPassword;
     }
-
-    public static string Decrypt(string password, string iv)
-    {
-        var key = DataHandler.DataReader();
-
-        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-        byte[] ivBytes = Encoding.UTF8.GetBytes(iv);
-
-        string plaintext = null;
-        // Create AesManaged
-        using (AesManaged aes = new AesManaged())
-        {
-            // Create a decryptor
-            ICryptoTransform decryptor = aes.CreateDecryptor(key, ivBytes);
-            // Create the streams used for decryption.
-            using (MemoryStream ms = new MemoryStream(passwordBytes))
-            {
-                // Create crypto stream
-                using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                {
-                    // Read crypto stream
-                    using (StreamReader reader = new StreamReader(cs))
-                        plaintext = reader.ReadToEnd();
-                }
-            }
-        }
-        return plaintext;
-    }
-
 
     static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
     {
@@ -86,11 +56,36 @@ internal static class SymmentricAlgorithm
                 using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                 {
                     using (StreamWriter sw = new StreamWriter(cs))
+                    {
                         sw.Write(plainText);
+                    }
                     encrypted = ms.ToArray();
                 }
             }
         }
         return encrypted;
+    }
+
+    public static string Decrypt(byte[] password, byte[] iv)
+    {
+        var key = DataHandler.DataReader();
+
+        string plaintext = null;
+
+        using (AesManaged aes = new AesManaged())
+        {
+            ICryptoTransform decryptor = aes.CreateDecryptor(key, iv);
+            using (MemoryStream ms = new MemoryStream(password))
+            {
+                using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                {
+                    using (StreamReader reader = new StreamReader(cs))
+                    {
+                        plaintext = reader.ReadToEnd();
+                    }
+                }
+            }
+        }
+        return plaintext;
     }
 }

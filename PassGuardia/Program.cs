@@ -1,11 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Npgsql;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.DbContexts;
 using PassGuardia.Domain.Queries;
 using PassGuardia.Domain.Repositories;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
