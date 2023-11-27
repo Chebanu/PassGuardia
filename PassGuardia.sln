@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Api", "PassGuardia\PassGuardia.Api.csproj", "{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Domain", "PassGuardia.Domain\PassGuardia.Domain.csproj", "{DFE3930C-8030-48FE-B222-80A907E98C00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Contracts", "PassGuardia.Contracts\PassGuardia.Contracts.csproj", "{E4CC2045-6A6F-4BA5-B5CB-79B7C785A457}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.UnitTest", "PassGuardia.UnitTest\PassGuardia.UnitTest.csproj", "{EFD06F4B-AE99-462F-9692-27B79E4390A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.Api", "PassGuardia.Api\PassGuardia.Api.csproj", "{0A8E8AE9-2F41-44C2-8227-E3825CB74699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1574EA3-A0B7-4C4D-9791-9CDAF5D2E330}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFE3930C-8030-48FE-B222-80A907E98C00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFE3930C-8030-48FE-B222-80A907E98C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFE3930C-8030-48FE-B222-80A907E98C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{EFD06F4B-AE99-462F-9692-27B79E4390A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFD06F4B-AE99-462F-9692-27B79E4390A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFD06F4B-AE99-462F-9692-27B79E4390A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
