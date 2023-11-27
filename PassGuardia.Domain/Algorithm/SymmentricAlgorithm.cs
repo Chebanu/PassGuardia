@@ -1,7 +1,7 @@
-﻿using PassGuardia.Contracts.Models;
+﻿using System.Security.Cryptography;
+
+using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Data;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace PassGuardia.Domain.Algorithm;
 
@@ -16,7 +16,7 @@ public static class SymmentricAlgorithm
 
         try
         {
-            using (AesManaged aes = new AesManaged())
+            using (AesManaged aes = new())
             {
                 if (key == null) key = aes.Key;
                 iv = aes.IV;
@@ -48,14 +48,14 @@ public static class SymmentricAlgorithm
     private static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
     {
         byte[] encrypted;
-        using (AesManaged aes = new AesManaged())
+        using (AesManaged aes = new())
         {
             ICryptoTransform encryptor = aes.CreateEncryptor(Key, IV);
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
-                using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                using (CryptoStream cs = new(ms, encryptor, CryptoStreamMode.Write))
                 {
-                    using (StreamWriter sw = new StreamWriter(cs))
+                    using (StreamWriter sw = new(cs))
                     {
                         sw.Write(plainText);
                     }
@@ -72,14 +72,14 @@ public static class SymmentricAlgorithm
 
         string plaintext = null;
 
-        using (AesManaged aes = new AesManaged())
+        using (AesManaged aes = new())
         {
             ICryptoTransform decryptor = aes.CreateDecryptor(key, iv);
-            using (MemoryStream ms = new MemoryStream(password))
+            using (MemoryStream ms = new(password))
             {
-                using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                using (CryptoStream cs = new(ms, decryptor, CryptoStreamMode.Read))
                 {
-                    using (StreamReader reader = new StreamReader(cs))
+                    using (StreamReader reader = new(cs))
                     {
                         plaintext = reader.ReadToEnd();
                     }

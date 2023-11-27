@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.DbContexts;
 
@@ -27,15 +28,8 @@ public class Repository : IRepository
         return password;
     }
 
-    public async Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default)
+    public Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default)
     {
-        var password= await _dbPassword.Passwords.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
-
-        if(password == null)
-        {
-            throw new NullReferenceException($"Password doesn't exist by id: {id}");
-        }
-
-        return password;
+        return _dbPassword.Passwords.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
     }
 }

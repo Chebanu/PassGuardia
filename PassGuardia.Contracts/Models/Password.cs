@@ -6,8 +6,10 @@ public class Password
 {
     [Key]
     public Guid Id { get; set; }
+
     [Required]
     public byte[] EncryptedPassword { get; set; }
+
     [Required]
     public byte[] IV { get; set; }
 }

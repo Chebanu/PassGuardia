@@ -1,10 +1,9 @@
-﻿using FluentAssertions;
-using MediatR;
+﻿using MediatR;
+
 using Moq;
-using PassGuardia.Contracts.Models;
+
 using PassGuardia.Domain.Queries;
 using PassGuardia.Domain.Repositories;
-using System.Text;
 
 namespace PassGuardia.UnitTest;
 
