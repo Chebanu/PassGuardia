@@ -1,4 +1,5 @@
-﻿using PassGuardia.Domain.Constants;
+﻿using Microsoft.Extensions.Logging;
+using PassGuardia.Domain.Constants;
 
 namespace PassGuardia.Domain.Data;
 
@@ -26,11 +27,15 @@ internal static class DataHandler
         }
         catch (FileNotFoundException)
         {
+            //log.info
+            //а нужно ли оно?*
             Console.WriteLine($"File {keyFilePath} not found.");
         }
         catch (Exception exp)
         {
-            Console.WriteLine($"Error reading key from file: {exp.Message}");
+            //log.error(exp.msg)
+            //throw new Exception
+            throw new Exception($"Error reading key from file");
         }
         return null;
     }

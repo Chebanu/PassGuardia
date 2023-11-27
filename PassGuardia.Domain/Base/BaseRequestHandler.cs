@@ -2,9 +2,13 @@
 
 namespace PassGuardia.Domain.Base;
 
-internal abstract class BaseRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
+public abstract class BaseRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    public BaseRequestHandler()
+    {
+    }
+
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
     {
         try

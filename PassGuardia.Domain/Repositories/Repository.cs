@@ -33,7 +33,7 @@ public class Repository : IRepository
 
         if(password == null)
         {
-            throw new NullReferenceException();
+            throw new NullReferenceException($"Password doesn't exist by id: {id}");
         }
 
         return password;

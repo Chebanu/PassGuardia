@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PassGuardia.Contracts.DTO;
+using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Queries;
 using PassGuardia.DTO;
@@ -17,7 +18,10 @@ public class PasswordController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
+    [ProducesResponseType(typeof(ErrorModel), 400)]
+    [ProducesResponseType(typeof(ErrorModel), 404)]
     public async Task<IActionResult> GetPassword(Guid id, CancellationToken cancellationToken = default)
     {
         GetPasswordByIdQuery query = new GetPasswordByIdQuery
@@ -25,15 +29,29 @@ public class PasswordController : ControllerBase
             Id = id
         };
 
-        GetPasswordByIdResult result = await _mediator.Send(query, cancellationToken);
+        GetPasswordByIdResult result;
 
-        return Ok(new ResponsePassword
+        try
         {
-            Password = result.Password
-        });
+            result = await _mediator.Send(query, cancellationToken);
+
+            return Ok(new ResponsePassword { Password = result.Password });
+        }
+        catch (NullReferenceException ex)
+        {
+            return NotFound(new ErrorModel { Message = $"Password with id {id} not found" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("Something went wrong during getting the password");
+        }
+
+
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(CreatePasswordResult), 201)]
+    [ProducesResponseType(typeof(ErrorModel), 400)]
     public async Task<IActionResult> CreatePassword(RequestPassword requestPassword, CancellationToken cancellationToken = default)
     {
         CreatePasswordCommand command = new CreatePasswordCommand

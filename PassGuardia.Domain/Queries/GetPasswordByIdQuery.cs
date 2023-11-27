@@ -15,11 +15,11 @@ public class GetPasswordByIdResult
     public string Password { get; init; }
 }
 
-internal class GetTaskByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>
+public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>
 {
     private readonly IRepository _repository;
 
-    public GetTaskByIdQueryHandler(IRepository repository)
+    public GetPasswordByIdQueryHandler(IRepository repository)
     {
         _repository = repository;
     }

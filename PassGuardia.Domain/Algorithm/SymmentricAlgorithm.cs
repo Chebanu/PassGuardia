@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PassGuardia.Domain.Algorithm;
 
-internal static class SymmentricAlgorithm
+public static class SymmentricAlgorithm
 {
     public static Password CreatePassword(string password)
     {
@@ -45,7 +45,7 @@ internal static class SymmentricAlgorithm
         return hashedPassword;
     }
 
-    static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
+    private static byte[] Encrypt(string plainText, byte[] Key, byte[] IV)
     {
         byte[] encrypted;
         using (AesManaged aes = new AesManaged())
