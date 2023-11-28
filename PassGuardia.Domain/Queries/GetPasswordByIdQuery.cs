@@ -1,4 +1,5 @@
 ﻿using MediatR;
+
 using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Base;
 using PassGuardia.Domain.Repositories;
@@ -27,9 +28,7 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
     protected override async Task<GetPasswordByIdResult> HandleInternal(GetPasswordByIdQuery request, CancellationToken cancellationToken)
     {
         var dbPassword = await _repository.GetPasswordById(request.Id, cancellationToken);
-
         var password = SymmentricAlgorithm.Decrypt(dbPassword.EncryptedPassword, dbPassword.IV);
-
         return new GetPasswordByIdResult { Password = password };
     }
 }

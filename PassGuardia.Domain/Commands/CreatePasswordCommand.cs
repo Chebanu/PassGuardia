@@ -1,8 +1,11 @@
 ﻿using MediatR;
+
+using Microsoft.Extensions.Options;
+
 using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Base;
+using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Repositories;
-using System.Diagnostics;
 
 namespace PassGuardia.Domain.Commands;
 
@@ -18,17 +21,19 @@ public class CreatePasswordResult
 internal class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>
 {
     private readonly IRepository _repository;
+    private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
-    public CreatePasswordCommandHandler(IRepository repository)
+    public CreatePasswordCommandHandler(IRepository repository, IOptionsMonitor<PassGuardiaConfig> options)
     {
         _repository = repository;
+        _options = options;
     }
 
     protected override async Task<CreatePasswordResult> HandleInternal(CreatePasswordCommand request, CancellationToken cancellationToken)
     {
-       var password = SymmentricAlgorithm.CreatePassword(request.Password);
+        var password = SymmentricAlgorithm.CreatePassword(request.Password);
 
-        _ = await _repository.CreatePassword(password, default);
+        await _repository.CreatePassword(password, cancellationToken);
 
         return new CreatePasswordResult
         {
