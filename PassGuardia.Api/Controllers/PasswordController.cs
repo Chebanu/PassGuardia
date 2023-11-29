@@ -6,7 +6,6 @@ using PassGuardia.Contracts.DTO;
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Queries;
-using PassGuardia.DTO;
 
 namespace PassGuardia.Api.Controllers;
 
