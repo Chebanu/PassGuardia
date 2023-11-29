@@ -482,3 +482,12 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Visual Studio .vs folder
+.vs/
+
+# PassGuardia specific
+.vs/PassGuardia/DesignTimeBuild/
+.vs/PassGuardia/v17/
+/.vs/ProjectEvaluation/passguardia.metadata.v7.bin
+/.vs/ProjectEvaluation/passguardia.projects.v7.bin
