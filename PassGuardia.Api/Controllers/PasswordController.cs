@@ -2,7 +2,6 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using PassGuardia.Contracts.DTO;
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Queries;
