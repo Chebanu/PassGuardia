@@ -9,7 +9,4 @@ public class Password
 
     [Required]
     public byte[] EncryptedPassword { get; set; }
-
-    [Required]
-    public byte[] IV { get; set; }
 }

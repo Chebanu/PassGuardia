@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.DbContexts;
@@ -19,6 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PasswordDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IEncryptor, AesEncryptor>();
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreatePasswordCommand).Assembly));
 
 var app = builder.Build();
