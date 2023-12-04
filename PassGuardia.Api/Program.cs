@@ -34,3 +34,5 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 
 await app.RunAsync();
+
+public partial class Program { }
