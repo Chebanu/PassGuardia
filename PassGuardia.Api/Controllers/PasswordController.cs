@@ -43,16 +43,31 @@ public class PasswordController : ControllerBase
     [ProducesResponseType(typeof(ErrorModel), 400)]
     public async Task<IActionResult> CreatePassword(RequestPassword requestPassword, CancellationToken cancellationToken = default)
     {
-        CreatePasswordCommand command = new()
+        try
         {
-            Password = requestPassword.Password
-        };
+            CreatePasswordCommand command = new()
+            {
+                Password = requestPassword.Password
+            };
 
-        CreatePasswordResult result = await _mediator.Send(command, cancellationToken);
+            CreatePasswordResult result = await _mediator.Send(command, cancellationToken);
 
-        return Created($"password/{result.Id}", new CreatePasswordResult
+            return Created($"password/{result.Id}", new CreatePasswordResult
+            {
+                Id = result.Id
+            });
+        }
+        catch (ArgumentOutOfRangeException)
         {
-            Id = result.Id
-        });
+            return BadRequest(new ErrorModel { Message = "You are out of range. Password must be in range between 1-100 characters" });
+        }
+        catch (ArgumentException)
+        {
+            return BadRequest(new ErrorModel { Message = "Input is wrong" });
+        }
+        catch
+        {
+            return BadRequest(new ErrorModel { Message = "Something went wrong" });
+        }
     }
 }

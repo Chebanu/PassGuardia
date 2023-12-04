@@ -18,8 +18,7 @@ public class CreatePasswordResult
 {
     public Guid Id { get; init; }
 }
-
-internal class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>
+public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>
 {
     private readonly IRepository _repository;
     private readonly IEncryptor _encryptor;
@@ -34,6 +33,16 @@ internal class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordC
 
     protected override async Task<CreatePasswordResult> HandleInternal(CreatePasswordCommand request, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(request.Password))
+        {
+            throw new ArgumentException(nameof(request.Password));
+        }
+
+        if (request.Password.Length < 1 || request.Password.Length > 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(request.Password));
+        }
+
         var keyConfig = _options.CurrentValue;
 
         var passwordAlgorithm = _encryptor.Encrypt(request.Password, keyConfig.EncryptionKey);

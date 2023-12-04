@@ -4,6 +4,7 @@ namespace PassGuardia.Contracts.Http;
 
 public class RequestPassword
 {
-    [StringLength(100, MinimumLength = 1, ErrorMessage = "You are out of range")]
+    [Required]
+    [MaxLength(100, ErrorMessage = "You password contains more than 100 characters")]
     public string Password { get; set; }
 }
