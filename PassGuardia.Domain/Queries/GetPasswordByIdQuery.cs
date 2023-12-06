@@ -1,5 +1,6 @@
 ﻿using MediatR;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using PassGuardia.Domain.Algorithm;
@@ -24,8 +25,10 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
     private readonly IRepository _repository;
     private readonly IEncryptor _encryptor;
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
+    private readonly ILogger<BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>> _logger;
 
-    public GetPasswordByIdQueryHandler(IRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
+    public GetPasswordByIdQueryHandler(IRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options,
+        ILogger<BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>> _logger) : base (_logger)
     {
         _repository = repository;
         _encryptor = encryptor;

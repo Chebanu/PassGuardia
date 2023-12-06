@@ -9,6 +9,7 @@ using PassGuardia.Domain.Queries;
 namespace PassGuardia.Api.Controllers;
 
 [Route("passwords")]
+[ServiceFilter(typeof(AuditActionFilter))]
 public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -30,6 +31,7 @@ public class PasswordController : ControllerBase
         };
 
         var result = await _mediator.Send(query, cancellationToken);
+
         if (result?.Password == null)
         {
             return NotFound(new ErrorModel { Message = $"Password with id {id} not found" });
@@ -65,7 +67,7 @@ public class PasswordController : ControllerBase
         {
             return BadRequest(new ErrorModel { Message = "Input is wrong" });
         }
-        catch
+        catch (Exception)
         {
             return BadRequest(new ErrorModel { Message = "Something went wrong" });
         }
