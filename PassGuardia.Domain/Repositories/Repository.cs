@@ -9,6 +9,7 @@ public interface IRepository
 {
     Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default);
     Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default);
+    Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default);
 }
 
 public class Repository : IRepository
@@ -31,5 +32,13 @@ public class Repository : IRepository
     public Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default)
     {
         return _dbPassword.Passwords.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
+    }
+
+    public async Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default)
+    {
+        await _dbPassword.Audits.AddAsync(audit, cancellationToken);
+        await _dbPassword.SaveChangesAsync(cancellationToken);
+
+        return audit;
     }
 }

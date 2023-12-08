@@ -24,10 +24,8 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
     private readonly IRepository _repository;
     private readonly IEncryptor _encryptor;
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
-    private readonly ILogger<BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>> _logger;
 
-    public CreatePasswordCommandHandler(IRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options,
-        ILogger<BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>> _logger) : base(_logger)
+    public CreatePasswordCommandHandler(IRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
     {
         _repository = repository;
         _encryptor = encryptor;

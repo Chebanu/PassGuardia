@@ -9,7 +9,6 @@ using PassGuardia.Domain.Queries;
 namespace PassGuardia.Api.Controllers;
 
 [Route("passwords")]
-[ServiceFilter(typeof(AuditActionFilter))]
 public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,7 +18,9 @@ public class PasswordController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet]
+    [Route("password/{id}")]
+    [ServiceFilter(typeof(AuditActionFilter))]
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
     [ProducesResponseType(typeof(ErrorModel), 404)]
@@ -41,6 +42,8 @@ public class PasswordController : ControllerBase
     }
 
     [HttpPost]
+    [Route("password:add")]
+    [ServiceFilter(typeof(AuditActionFilter))]
     [ProducesResponseType(typeof(CreatePasswordResult), 201)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
     public async Task<IActionResult> CreatePassword(RequestPassword requestPassword, CancellationToken cancellationToken = default)

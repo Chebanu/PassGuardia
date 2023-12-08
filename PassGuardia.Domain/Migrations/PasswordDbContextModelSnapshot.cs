@@ -22,6 +22,34 @@ namespace PassGuardia.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Audit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestMethod")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestPath")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audit", (string)null);
+                });
+
             modelBuilder.Entity("PassGuardia.Contracts.Models.Password", b =>
                 {
                     b.Property<Guid>("Id")
@@ -34,7 +62,7 @@ namespace PassGuardia.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Passwords");
+                    b.ToTable("Password", (string)null);
                 });
 #pragma warning restore 612, 618
         }

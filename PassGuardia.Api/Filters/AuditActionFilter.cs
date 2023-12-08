@@ -1,50 +1,45 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+
+using PassGuardia.Domain.Repositories;
 
 public class AuditActionFilter : ActionFilterAttribute
 {
-    private readonly ILogger<AuditActionFilter> _logger;
+    private readonly IRepository _repository;
 
-    public AuditActionFilter(ILogger<AuditActionFilter> logger)
+    public AuditActionFilter(IRepository repository)
     {
+        _repository = repository;
     }
 
-    public override void OnActionExecuting(ActionExecutingContext context)
+    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        LogAction(context, "Executing");
-    }
-
-    public override void OnActionExecuted(ActionExecutedContext context)
-    {
-        LogAction(context, "Executed");
-    }
-
-    private void LogAction(FilterContext context, string actionType)
-    {
-        var requestPath = context.HttpContext.Request.Path;
-        var controller = context.RouteData.Values["controller"];
-        var action = context.RouteData.Values["action"];
-        var httpMethod = context.HttpContext.Request;
-        var statusCode = context.HttpContext.Response.StatusCode;
-        var date = DateTime.UtcNow;
-        var exceptionFeature = context.HttpContext.Features.Get<IExceptionHandlerFeature>();
-        var exception = exceptionFeature?.Error;
-
-        if (statusCode >= 400)
+        var audit = new Audit()
         {
-            _logger.LogError($"{exception}\nAudit - {actionType}: {controller}.{action}.{statusCode}",
-                               $"{requestPath.Value}",
-                               $"{httpMethod.Method}",
-                               statusCode,
-                               date);
-        }
-        else
+            RequestPath = context.HttpContext.Request.Path,
+            RequestMethod = context.HttpContext.Request.Method,
+            TimeStamp = DateTime.UtcNow
+        };
+
+        var result = await next();
+
+        if(result != null)
         {
-            _logger.LogInformation($"Audit - {actionType}: {controller}.{action}.{statusCode}",
-                                  $"{requestPath.Value}",
-                                  $"{httpMethod.Method}",
-                                  statusCode,
-                                  date);
+            audit.Exception = GetExceptionDetails(result.Exception);
         }
+
+        audit.StatusCode = result.HttpContext.Response.StatusCode;
+
+        await _repository.CreateAudit(audit);
+    }
+
+    private string GetExceptionDetails(Exception exception)
+    {
+        if (exception == null)
+        {
+            return null;
+        }
+
+        return $"{exception.GetType().FullName}: {exception.Message}\nStackTrace: {exception.StackTrace}";
     }
 }

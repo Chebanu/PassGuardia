@@ -12,8 +12,8 @@ using PassGuardia.Domain.DbContexts;
 namespace PassGuardia.Domain.Migrations
 {
     [DbContext(typeof(PasswordDbContext))]
-    [Migration("20231201233918_Initial")]
-    partial class Initial
+    [Migration("20231208021353_PasswordAndAuditTables")]
+    partial class PasswordAndAuditTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,34 @@ namespace PassGuardia.Domain.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Audit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestMethod")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RequestPath")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audit", (string)null);
+                });
 
             modelBuilder.Entity("PassGuardia.Contracts.Models.Password", b =>
                 {
@@ -37,7 +65,7 @@ namespace PassGuardia.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Passwords");
+                    b.ToTable("Password", (string)null);
                 });
 #pragma warning restore 612, 618
         }
