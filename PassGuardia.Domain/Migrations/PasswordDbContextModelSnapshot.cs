@@ -26,43 +26,51 @@ namespace PassGuardia.Domain.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Exception")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("exception");
 
                     b.Property<string>("RequestMethod")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("request_method");
 
                     b.Property<string>("RequestPath")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("request_path");
 
                     b.Property<int>("StatusCode")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status_code");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("timestamp");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Audit", (string)null);
+                    b.ToTable("audit");
                 });
 
             modelBuilder.Entity("PassGuardia.Contracts.Models.Password", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<byte[]>("EncryptedPassword")
                         .IsRequired()
-                        .HasColumnType("bytea");
+                        .HasColumnType("bytea")
+                        .HasColumnName("encrypted_password");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Password", (string)null);
+                    b.ToTable("passwords");
                 });
 #pragma warning restore 612, 618
         }

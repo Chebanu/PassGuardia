@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 
+using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Repositories;
 
 public class AuditActionFilter : ActionFilterAttribute
@@ -17,7 +18,7 @@ public class AuditActionFilter : ActionFilterAttribute
         {
             RequestPath = context.HttpContext.Request.Path,
             RequestMethod = context.HttpContext.Request.Method,
-            TimeStamp = DateTime.UtcNow
+            Timestamp = DateTime.UtcNow
         };
 
         var result = await next();
