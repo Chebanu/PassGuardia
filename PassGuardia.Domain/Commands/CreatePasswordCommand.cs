@@ -1,6 +1,5 @@
 ﻿using MediatR;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using PassGuardia.Contracts.Models;
