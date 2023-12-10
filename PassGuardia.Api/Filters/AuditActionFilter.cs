@@ -36,8 +36,8 @@ public class AuditActionFilter : IAsyncResultFilter
 
     private static string GetExceptionDetails(Exception exception)
     {
-        return exception == null 
-            ? null 
+        return exception == null
+            ? null
             : $"{exception.GetType().FullName}: {exception.Message}\nStackTrace: {exception.StackTrace}";
     }
 }
