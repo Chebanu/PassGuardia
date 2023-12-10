@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using PassGuardia.Api.Filters;
 using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Configuration;

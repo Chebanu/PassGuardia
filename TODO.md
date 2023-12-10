@@ -10,3 +10,5 @@
 10. mess between MediatR and API Response - use different models
 11. location of created password is wrong
 12. don't forget namespaces
+13. try JSON for exception
+14. duplicated audit log

@@ -3,7 +3,9 @@
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Repositories;
 
-public class AuditActionFilter : ActionFilterAttribute
+namespace PassGuardia.Api.Filters;
+
+public class AuditActionFilter : IAsyncResultFilter
 {
     private readonly IRepository _repository;
 
@@ -12,7 +14,7 @@ public class AuditActionFilter : ActionFilterAttribute
         _repository = repository;
     }
 
-    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
         var audit = new Audit()
         {
@@ -22,8 +24,7 @@ public class AuditActionFilter : ActionFilterAttribute
         };
 
         var result = await next();
-
-        if (result != null)
+        if (result.Exception != null)
         {
             audit.Exception = GetExceptionDetails(result.Exception);
         }
@@ -33,13 +34,10 @@ public class AuditActionFilter : ActionFilterAttribute
         await _repository.CreateAudit(audit);
     }
 
-    private string GetExceptionDetails(Exception exception)
+    private static string GetExceptionDetails(Exception exception)
     {
-        if (exception == null)
-        {
-            return null;
-        }
-
-        return $"{exception.GetType().FullName}: {exception.Message}\nStackTrace: {exception.StackTrace}";
+        return exception == null 
+            ? null 
+            : $"{exception.GetType().FullName}: {exception.Message}\nStackTrace: {exception.StackTrace}";
     }
 }

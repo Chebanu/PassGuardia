@@ -20,7 +20,6 @@ public class PasswordController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    [ServiceFilter(typeof(AuditActionFilter))]
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
     [ProducesResponseType(typeof(ErrorModel), 404)]
@@ -43,7 +42,6 @@ public class PasswordController : ControllerBase
 
     [HttpPost]
     [Route("")]
-    [ServiceFilter(typeof(AuditActionFilter))]
     [ProducesResponseType(typeof(CreatePasswordResult), 201)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
     public async Task<IActionResult> CreatePassword([FromBody] RequestPassword requestPassword, CancellationToken cancellationToken = default)
