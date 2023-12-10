@@ -19,12 +19,12 @@ public class PasswordController : ControllerBase
     }
 
     [HttpGet]
-    [Route("password/{id}")]
+    [Route("{id}")]
     [ServiceFilter(typeof(AuditActionFilter))]
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
     [ProducesResponseType(typeof(ErrorModel), 404)]
-    public async Task<IActionResult> GetPassword(Guid id, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPassword([FromRoute] Guid id, CancellationToken cancellationToken = default)
     {
         GetPasswordByIdQuery query = new()
         {
@@ -42,11 +42,11 @@ public class PasswordController : ControllerBase
     }
 
     [HttpPost]
-    [Route("password:add")]
+    [Route("")]
     [ServiceFilter(typeof(AuditActionFilter))]
     [ProducesResponseType(typeof(CreatePasswordResult), 201)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
-    public async Task<IActionResult> CreatePassword(RequestPassword requestPassword, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreatePassword([FromBody] RequestPassword requestPassword, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -57,9 +57,9 @@ public class PasswordController : ControllerBase
 
             CreatePasswordResult result = await _mediator.Send(command, cancellationToken);
 
-            return Created($"password/{result.Id}", new CreatePasswordResult
+            return Created($"password/{result.PasswordId}", new CreatePasswordResult
             {
-                Id = result.Id
+                PasswordId = result.PasswordId
             });
         }
         catch (ArgumentOutOfRangeException)
