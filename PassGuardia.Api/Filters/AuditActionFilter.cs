@@ -22,7 +22,7 @@ public class AuditActionFilter : ActionFilterAttribute
 
         var result = await next();
 
-        if(result != null)
+        if (result != null)
         {
             audit.Exception = GetExceptionDetails(result.Exception);
         }
