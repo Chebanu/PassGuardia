@@ -22,7 +22,7 @@ namespace PassGuardia.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Audit", b =>
+            modelBuilder.Entity("PassGuardia.Contracts.Models.Audit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

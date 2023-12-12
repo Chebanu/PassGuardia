@@ -12,7 +12,7 @@ using PassGuardia.Domain.DbContexts;
 namespace PassGuardia.Domain.Migrations
 {
     [DbContext(typeof(PasswordDbContext))]
-    [Migration("20231210095527_Initial")]
+    [Migration("20231212165719_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace PassGuardia.Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Audit", b =>
+            modelBuilder.Entity("PassGuardia.Contracts.Models.Audit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
