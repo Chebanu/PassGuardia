@@ -7,38 +7,38 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PassGuardia.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class PasswordAndAuditTables : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Audit",
+                name: "audit",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RequestPath = table.Column<string>(type: "text", nullable: true),
-                    RequestMethod = table.Column<string>(type: "text", nullable: true),
-                    Exception = table.Column<string>(type: "text", nullable: true),
-                    StatusCode = table.Column<int>(type: "integer", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    request_path = table.Column<string>(type: "text", nullable: true),
+                    request_method = table.Column<string>(type: "text", nullable: true),
+                    exception = table.Column<string>(type: "text", nullable: true),
+                    status_code = table.Column<int>(type: "integer", nullable: false),
+                    timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Audit", x => x.Id);
+                    table.PrimaryKey("PK_audit", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Password",
+                name: "passwords",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EncryptedPassword = table.Column<byte[]>(type: "bytea", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    encrypted_password = table.Column<byte[]>(type: "bytea", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Password", x => x.Id);
+                    table.PrimaryKey("PK_passwords", x => x.id);
                 });
         }
 
@@ -46,10 +46,10 @@ namespace PassGuardia.Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Audit");
+                name: "audit");
 
             migrationBuilder.DropTable(
-                name: "Password");
+                name: "passwords");
         }
     }
 }

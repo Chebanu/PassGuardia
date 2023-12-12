@@ -1,6 +1,5 @@
 ﻿using MediatR;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using PassGuardia.Contracts.Models;
@@ -17,7 +16,7 @@ public class CreatePasswordCommand : IRequest<CreatePasswordResult>
 }
 public class CreatePasswordResult
 {
-    public Guid Id { get; init; }
+    public Guid PasswordId { get; init; }
 }
 public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>
 {
@@ -58,7 +57,7 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
 
         return new CreatePasswordResult
         {
-            Id = password.Id
+            PasswordId = password.Id
         };
     }
 }

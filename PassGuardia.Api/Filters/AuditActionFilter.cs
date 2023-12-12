@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json;
+
 using Microsoft.AspNetCore.Mvc.Filters;
 
+using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Repositories;
 
-public class AuditActionFilter : ActionFilterAttribute
+namespace PassGuardia.Api.Filters;
+
+public class AuditActionFilter : IAsyncActionFilter
 {
     private readonly IRepository _repository;
 
@@ -12,34 +16,28 @@ public class AuditActionFilter : ActionFilterAttribute
         _repository = repository;
     }
 
-    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var audit = new Audit()
         {
             RequestPath = context.HttpContext.Request.Path,
             RequestMethod = context.HttpContext.Request.Method,
-            TimeStamp = DateTime.UtcNow
+            Timestamp = DateTime.UtcNow
         };
 
         var result = await next();
-
-        if(result != null)
+        if (result.Exception != null)
         {
-            audit.Exception = GetExceptionDetails(result.Exception);
+            audit.Exception = JsonSerializer.Serialize(new
+            {
+                result.Exception.Message,
+                result.Exception.StackTrace
+            });
         }
 
+        // ToDo: known issue, status code always 200
         audit.StatusCode = result.HttpContext.Response.StatusCode;
 
         await _repository.CreateAudit(audit);
-    }
-
-    private string GetExceptionDetails(Exception exception)
-    {
-        if (exception == null)
-        {
-            return null;
-        }
-
-        return $"{exception.GetType().FullName}: {exception.Message}\nStackTrace: {exception.StackTrace}";
     }
 }

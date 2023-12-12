@@ -16,6 +16,8 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 - valid password should be non-empty string and max 100 characters
 - there are two user roles: `admin` and `user`
 - Admin is able to see audit logs
+- Username length from 5 to 20 characters. English letters, numbers, and underscore are allowed.
+- Password length from 8 to 100 characters. English letters, numbers, special characters and underscore are allowed.
 
 ## Non-Functional Requirement
 
@@ -64,6 +66,21 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 #### Password Not Found
 
 - status: `404`
+- response: `{ errors: string[] }`
+
+### Register user
+
+- method: `POST`
+- path: `/users`
+
+#### User Registered
+
+- status: `201`
+- response: `{ userId: guid }`
+
+#### Username Taken
+
+- status: `400`
 - response: `{ errors: string[] }`
 
 ### Common Responses

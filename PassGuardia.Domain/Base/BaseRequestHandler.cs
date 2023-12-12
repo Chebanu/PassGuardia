@@ -1,7 +1,5 @@
 ﻿using MediatR;
 
-using Microsoft.Extensions.Logging;
-
 namespace PassGuardia.Domain.Base;
 
 public abstract class BaseRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
