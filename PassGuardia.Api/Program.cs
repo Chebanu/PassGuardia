@@ -1,7 +1,14 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using PassGuardia.Api.Filters;
+using PassGuardia.Api.Validator;
+using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Configuration;
@@ -17,11 +24,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+
 builder.Services.AddDbContext<PasswordDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<AuditActionFilter>();
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IEncryptor, AesEncryptor>();
+builder.Services.AddScoped<IValidator<PasswordRequest>, PasswordRequestValidator>();
+
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreatePasswordCommand).Assembly));
 
 builder.Services.AddMvc(options =>
@@ -39,6 +49,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 
-await app.RunAsync();
+app.Run();
 
 public partial class Program { }

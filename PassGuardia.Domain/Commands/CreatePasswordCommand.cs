@@ -33,16 +33,6 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
 
     protected override async Task<CreatePasswordResult> HandleInternal(CreatePasswordCommand request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.Password))
-        {
-            throw new ArgumentException($"{nameof(request.Password)}. The input field is empty or white space");
-        }
-
-        if (request.Password.Length < 1 || request.Password.Length > 100)
-        {
-            throw new ArgumentOutOfRangeException($"{nameof(request.Password)}. The input is out of range");
-        }
-
         var keyConfig = _options.CurrentValue;
 
         var passwordAlgorithm = _encryptor.Encrypt(request.Password, keyConfig.EncryptionKey);

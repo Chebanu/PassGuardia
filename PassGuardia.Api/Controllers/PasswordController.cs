@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +14,12 @@ namespace PassGuardia.Api.Controllers;
 public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IValidator<PasswordRequest> _passwordValidator;
 
-    public PasswordController(IMediator mediator)
+    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator)
     {
         _mediator = mediator;
+        _passwordValidator = passwordValidator;
     }
 
     [HttpGet]
@@ -37,15 +41,23 @@ public class PasswordController : ControllerBase
             return NotFound(new ErrorModel { Message = $"Password with id {id} not found" });
         }
 
-        return Ok(new ResponsePassword { Password = result.Password });
+        return Ok(new PasswordResponse { Password = result.Password });
     }
 
     [HttpPost]
     [Route("")]
     [ProducesResponseType(typeof(CreatePasswordResult), 201)]
     [ProducesResponseType(typeof(ErrorModel), 400)]
-    public async Task<IActionResult> CreatePassword([FromBody] RequestPassword requestPassword, CancellationToken cancellationToken = default)
+    [ProducesResponseType(typeof(ErrorModel), 500)]
+    public async Task<IActionResult> CreatePassword([FromBody] PasswordRequest requestPassword, CancellationToken cancellationToken = default)
     {
+        var validationResult = await _passwordValidator.ValidateAsync(requestPassword, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(new ErrorModel { Message = "Input is wrong" });
+        }
+
         try
         {
             CreatePasswordCommand command = new()
@@ -53,24 +65,16 @@ public class PasswordController : ControllerBase
                 Password = requestPassword.Password
             };
 
-            CreatePasswordResult result = await _mediator.Send(command, cancellationToken);
+            CreatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);
 
-            return Created($"password/{result.PasswordId}", new CreatePasswordResult
+            return Created($"password/{passwordResult.PasswordId}", new CreatePasswordResult
             {
-                PasswordId = result.PasswordId
+                PasswordId = passwordResult.PasswordId
             });
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            return BadRequest(new ErrorModel { Message = "You are out of range. Password must be in range between 1-100 characters" });
-        }
-        catch (ArgumentException)
-        {
-            return BadRequest(new ErrorModel { Message = "Input is wrong" });
         }
         catch (Exception)
         {
-            return BadRequest(new ErrorModel { Message = "Something went wrong" });
+            return StatusCode(500, new ErrorModel { Message = "Something went wrong" });
         }
     }
 }
