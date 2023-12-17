@@ -1,10 +1,13 @@
 ﻿using MediatR;
 
+using Microsoft.Extensions.Logging;
+
 namespace PassGuardia.Domain.Base;
 
 public abstract class BaseRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    private readonly ILogger<BaseRequestHandler<TRequest, TResponse>> _logger;
 
     public BaseRequestHandler()
     {
@@ -14,12 +17,15 @@ public abstract class BaseRequestHandler<TRequest, TResponse> : IRequestHandler<
     {
         try
         {
+            _logger.LogDebug("Handling {@Name}. Request: {@Request}", GetType().Name, request);
             TResponse result = await HandleInternal(request, cancellationToken);
+            _logger.LogInformation("Handled {@Name}. Request: {@Request}. Result: {@Result}", GetType().Name, request, result);
 
             return result;
         }
-        catch
+        catch (Exception e)
         {
+            _logger.LogError(e, "Error handling {@Name}. Request: {@Request}", GetType().Name, request);
             throw;
         }
     }
