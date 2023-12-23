@@ -34,8 +34,8 @@ internal class AuthenticateUserCommandHandler : BaseRequestHandler<AuthenticateU
     private readonly IOptionsMonitor<JwtSettings> _jwtOptions;
 
     public AuthenticateUserCommandHandler(UserManager<IdentityUser> userManager,
-                                            IOptionsMonitor<JwtSettings> jwtOptions/*,
-                                            ILogger<BaseRequestHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>> logger*/)/* : base (logger)*/
+                                            IOptionsMonitor<JwtSettings> jwtOptions,
+                                            ILogger<BaseRequestHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>> logger) : base(logger)
     {
         _userManager = userManager;
         _jwtOptions = jwtOptions;

@@ -29,6 +29,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOptions<PassGuardiaConfig>().Bind(builder.Configuration);
 
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
