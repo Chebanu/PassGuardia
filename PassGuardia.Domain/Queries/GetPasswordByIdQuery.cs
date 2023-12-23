@@ -27,8 +27,8 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
     public GetPasswordByIdQueryHandler(IPasswordRepository repository, IEncryptor encryptor,
-                                        IOptionsMonitor<PassGuardiaConfig> options,
-                                        ILogger<BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>> logger) : base(logger)
+                                        IOptionsMonitor<PassGuardiaConfig> options)/*,
+                                        ILogger<BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>> logger) : base(logger)*/
     {
         _repository = repository;
         _encryptor = encryptor;

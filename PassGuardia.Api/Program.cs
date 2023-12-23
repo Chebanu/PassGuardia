@@ -5,6 +5,8 @@ using System.Text;
 
 using FluentValidation;
 
+using MediatR;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -101,7 +103,6 @@ builder.Services.AddScoped<IValidator<PasswordRequest>, PasswordRequestValidator
 builder.Services.AddScoped<IValidator<RegisterUserRequest>, RegisterUserRequestValidator>();
 builder.Services.AddScoped <IValidator<AuthenticateUserRequest>, AuthenticateUserRequestValidator>();
 
-/*builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(CreatePasswordCommand).Assembly));*/
 
 builder.Services.AddMvc(options =>
 {
