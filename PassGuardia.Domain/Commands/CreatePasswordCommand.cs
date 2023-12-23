@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Algorithm;
-using PassGuardia.Domain.Base;
+using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Repositories;
 
@@ -20,11 +20,11 @@ public class CreatePasswordResult
 }
 public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>
 {
-    private readonly IRepository _repository;
+    private readonly IPasswordRepository _repository;
     private readonly IEncryptor _encryptor;
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
-    public CreatePasswordCommandHandler(IRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
+    public CreatePasswordCommandHandler(IPasswordRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
     {
         _repository = repository;
         _encryptor = encryptor;

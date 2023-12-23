@@ -1,7 +1,6 @@
-namespace PassGuardia.Domain.Configuration
+namespace PassGuardia.Domain.Configuration;
+
+public class PassGuardiaConfig
 {
-    public class PassGuardiaConfig
-    {
-        public byte[] EncryptionKey { get; set; }
-    }
+    public byte[] EncryptionKey { get; set; }
 }

@@ -3,7 +3,7 @@
 using Microsoft.Extensions.Options;
 
 using PassGuardia.Domain.Algorithm;
-using PassGuardia.Domain.Base;
+using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Repositories;
 
@@ -21,11 +21,11 @@ public class GetPasswordByIdResult
 
 public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>
 {
-    private readonly IRepository _repository;
+    private readonly IPasswordRepository _repository;
     private readonly IEncryptor _encryptor;
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
-    public GetPasswordByIdQueryHandler(IRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
+    public GetPasswordByIdQueryHandler(IPasswordRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
     {
         _repository = repository;
         _encryptor = encryptor;

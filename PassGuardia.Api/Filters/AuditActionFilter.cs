@@ -9,9 +9,9 @@ namespace PassGuardia.Api.Filters;
 
 public class AuditActionFilter : IAsyncActionFilter
 {
-    private readonly IRepository _repository;
+    private readonly IPasswordRepository _repository;
 
-    public AuditActionFilter(IRepository repository)
+    public AuditActionFilter(IPasswordRepository repository)
     {
         _repository = repository;
     }
