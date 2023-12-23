@@ -6,6 +6,7 @@ using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace PassGuardia.Domain.Queries;
 
@@ -25,7 +26,9 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
     private readonly IEncryptor _encryptor;
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
-    public GetPasswordByIdQueryHandler(IPasswordRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
+    public GetPasswordByIdQueryHandler(IPasswordRepository repository, IEncryptor encryptor,
+                                        IOptionsMonitor<PassGuardiaConfig> options,
+                                        ILogger<BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>> logger) : base(logger)
     {
         _repository = repository;
         _encryptor = encryptor;

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 using PassGuardia.Domain.Constants;
 using PassGuardia.Domain.Handlers;
@@ -25,7 +26,9 @@ internal class RegisterUserCommandHandler : BaseRequestHandler<RegisterUserComma
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public RegisterUserCommandHandler(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+    public RegisterUserCommandHandler(UserManager<IdentityUser> userManager,
+                                        RoleManager<IdentityRole> roleManager,
+                                        ILogger<BaseRequestHandler<RegisterUserCommand, RegisterUserCommandResult>> logger) : base(logger)
     {
         _userManager = userManager;
         _roleManager = roleManager;

@@ -7,6 +7,7 @@ using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace PassGuardia.Domain.Commands;
 
@@ -24,7 +25,9 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
     private readonly IEncryptor _encryptor;
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
-    public CreatePasswordCommandHandler(IPasswordRepository repository, IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options)
+    public CreatePasswordCommandHandler(IPasswordRepository repository,
+                                        IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options, 
+                                        Logger<BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>> logger) : base(logger)
     {
         _repository = repository;
         _encryptor = encryptor;

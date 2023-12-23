@@ -5,6 +5,7 @@ using System.Text;
 using MediatR;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,7 +33,9 @@ internal class AuthenticateUserCommandHandler : BaseRequestHandler<AuthenticateU
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOptionsMonitor<JwtSettings> _jwtOptions;
 
-    public AuthenticateUserCommandHandler(UserManager<IdentityUser> userManager, IOptionsMonitor<JwtSettings> jwtOptions)
+    public AuthenticateUserCommandHandler(UserManager<IdentityUser> userManager,
+                                            IOptionsMonitor<JwtSettings> jwtOptions,
+                                            ILogger<BaseRequestHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>> logger) : base (logger)
     {
         _userManager = userManager;
         _jwtOptions = jwtOptions;
