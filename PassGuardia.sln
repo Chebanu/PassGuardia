@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Domain", "PassG
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Contracts", "PassGuardia.Contracts\PassGuardia.Contracts.csproj", "{E4CC2045-6A6F-4BA5-B5CB-79B7C785A457}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.UnitTest", "PassGuardia.UnitTest\PassGuardia.UnitTest.csproj", "{EFD06F4B-AE99-462F-9692-27B79E4390A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.UnitTest", "PassGuardia.UnitTest\PassGuardia.UnitTest.csproj", "{EFD06F4B-AE99-462F-9692-27B79E4390A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.Api", "PassGuardia.Api\PassGuardia.Api.csproj", "{0A8E8AE9-2F41-44C2-8227-E3825CB74699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PassGuardia.Api", "PassGuardia.Api\PassGuardia.Api.csproj", "{0A8E8AE9-2F41-44C2-8227-E3825CB74699}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassGuardia.IntegrationTest", "PassGuardia.IntegrationTest\PassGuardia.IntegrationTest.csproj", "{B8693E10-98A7-4A57-9721-6C9979413934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A8E8AE9-2F41-44C2-8227-E3825CB74699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8693E10-98A7-4A57-9721-6C9979413934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8693E10-98A7-4A57-9721-6C9979413934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8693E10-98A7-4A57-9721-6C9979413934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8693E10-98A7-4A57-9721-6C9979413934}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using MediatR;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Moq;
@@ -26,7 +27,7 @@ public class GetPasswordTests
 
     public GetPasswordTests()
     {
-        _handlerGetter = new GetPasswordByIdQueryHandler(_repositoryMock.Object, _encryptorMock.Object, _optionMock.Object);
+        _handlerGetter = new GetPasswordByIdQueryHandler(_repositoryMock.Object, _encryptorMock.Object, _optionMock.Object, Mock.Of<ILogger<GetPasswordByIdQueryHandler>>());
     }
 
     #region GetPasswordTests

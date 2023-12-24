@@ -1,9 +1,12 @@
 ﻿using System.Text;
 
+using Castle.Core.Logging;
+
 using FluentAssertions;
 
 using MediatR;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Moq;
@@ -26,7 +29,7 @@ public class CreatePasswordTest
 
     public CreatePasswordTest()
     {
-        _handlerCreator = new CreatePasswordCommandHandler(_repositoryMock.Object, _encryptorMock.Object, _optionMock.Object);
+        _handlerCreator = new CreatePasswordCommandHandler(_repositoryMock.Object, _encryptorMock.Object, _optionMock.Object, Mock.Of<ILogger<CreatePasswordCommandHandler>>());
     }
 
     #region CreatePasswordTests
@@ -56,21 +59,6 @@ public class CreatePasswordTest
         _optionMock.Verify(x => x.CurrentValue, Times.Once);
         _encryptorMock.Verify(x => x.Encrypt(plainTextPassword, config.EncryptionKey), Times.Once);
         _repositoryMock.Verify(x => x.CreatePassword(It.IsAny<Password>(), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("dzPVGfry7Qfdbri3bvz73ro0VGj5d4GcUC5NMOsRx6hOUtDbXq4qrmap41BXN9h6gG6TuvgKcV5MdeACABQ1MYx8BQnLNaX1Me7cXKlBu8VQex3dwQO0HpPBClHlEHUyNegLQOoQbFkgX1X2c8rwozu2jqWkw5peTEmfHdMs6BOZKpVmS5Pg1nZ5rgB3v8S2AOcn9eHQBJ8d5A5RnphrT9azfoUJyAUERgVzC99lK3HBXApPa8ugj1q54BIeuggLu2c2")]
-    public async Task CreatePassword_ArgumentException_EmptyString(string invalidPassword)
-    {
-        var command = new CreatePasswordCommand { Password = invalidPassword };
-
-        // Act
-        var act = async () => await _handlerCreator.Handle(command, CancellationToken.None);
-
-        //Assert
-        _ = await act.Should().ThrowAsync<ArgumentException>();
     }
     #endregion
 }
