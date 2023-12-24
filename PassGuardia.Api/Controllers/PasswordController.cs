@@ -27,11 +27,16 @@ public class PasswordController : ControllerBase
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
-    public async Task<IActionResult> GetPassword([FromRoute] Guid id, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPassword([FromRoute] string id, CancellationToken cancellationToken = default)
     {
+        if (!Guid.TryParse(id, out _))
+        {
+            return BadRequest(new ErrorResponse { Errors = new[] { $"Invalid GUID format: {id}" } });
+        }
+
         GetPasswordByIdQuery query = new()
         {
-            Id = id
+            Id = Guid.Parse(id)
         };
 
         var result = await _mediator.Send(query, cancellationToken);
@@ -48,10 +53,9 @@ public class PasswordController : ControllerBase
     [Route("")]
     [ProducesResponseType(typeof(CreatePasswordResult), 201)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
-    [ProducesResponseType(typeof(ErrorResponse), 500)]
-    public async Task<IActionResult> CreatePassword([FromBody] PasswordRequest requestPassword, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreatePassword([FromBody] PasswordRequest passwordRequest, CancellationToken cancellationToken = default)
     {
-        var validationResult = await _passwordValidator.ValidateAsync(requestPassword, cancellationToken);
+        var validationResult = await _passwordValidator.ValidateAsync(passwordRequest, cancellationToken);
 
         if (!validationResult.IsValid)
         {
@@ -61,23 +65,16 @@ public class PasswordController : ControllerBase
             });
         }
 
-        try
+        CreatePasswordCommand command = new()
         {
-            CreatePasswordCommand command = new()
-            {
-                Password = requestPassword.Password
-            };
+            Password = passwordRequest.Password
+        };
 
-            CreatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);
+        CreatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);
 
-            return Created($"passwords/{passwordResult.PasswordId}", new CreatePasswordResult
-            {
-                PasswordId = passwordResult.PasswordId
-            });
-        }
-        catch (Exception)
+        return Created($"passwords/{passwordResult.PasswordId}", new CreatePasswordResult
         {
-            return StatusCode(500, new ErrorResponse { Errors = new[] { "Something went wrong" } });
-        }
+            PasswordId = passwordResult.PasswordId
+        });
     }
 }

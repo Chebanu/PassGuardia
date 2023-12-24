@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "PassGuardia.IntegrationTest": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51105;http://localhost:51106"
+    }
+  }
+}

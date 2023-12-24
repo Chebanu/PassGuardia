@@ -9,7 +9,10 @@ public class PasswordRequestValidator : AbstractValidator<PasswordRequest>
     public PasswordRequestValidator()
     {
         RuleFor(x => x.Password)
+            .NotNull()
+            .WithMessage("The field is null")
             .Length(1, 100)
-            .WithMessage("Your password must be in 1 - 100 range characters");
+            .WithMessage("Your password must be in the 1-100 character range");
+
     }
 }
