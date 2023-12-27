@@ -40,7 +40,7 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 
 - method: `POST`
 - path: `/passwords`
-- body: `{ password: string }`
+- body: `{ password: string, visibility: enum { public, private } }`
 
 #### Password Created
 
@@ -82,6 +82,31 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 
 - status: `400`
 - response: `{ errors: string[] }`
+
+### Authenticate user
+
+- method: `POST`
+- path: `/users/authenticate`
+
+#### User Authenticated
+
+- status: `200`
+- response: `{ token: string }`
+
+#### User Not Found or Invalid Password
+
+- status: `400`
+- response: `{ errors: string[] }`
+
+### Get audit
+
+- method: `GET`
+- path: `/audit`
+
+#### Audit Found
+
+- status: `200`
+- response: `{ audit: { id: string, requestPath: string, requestMethod: string, exception: string, statusCode: int, timestamp: string }[] }`
 
 ### Common Responses
 
