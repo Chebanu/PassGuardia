@@ -1,25 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-
-using FluentValidation;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 using PassGuardia.Api.Constants;
 using PassGuardia.Api.Filters;
-using PassGuardia.Api.Validator;
-using PassGuardia.Contracts.Http;
+using PassGuardia.Api.StartupExtensions;
 using PassGuardia.Domain;
 using PassGuardia.Domain.Algorithm;
-using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Constants;
 using PassGuardia.Domain.DbContexts;
@@ -32,33 +24,7 @@ builder.Services.AddOptions<PassGuardiaConfig>().Bind(builder.Configuration);
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme."
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            []
-        }
-    });
-});
+builder.Services.AddSwaggerConfiguration();
 
 builder.Services.AddControllers();
 
@@ -72,6 +38,7 @@ builder.Services.AddDomainServices(
 builder.Services
     .AddAuthorizationBuilder()
     .AddPolicy(AuthorizePolicies.User, policy => policy.RequireClaim(ClaimTypes.Role, Roles.User));
+
 
 builder.Services
     .AddAuthentication(options =>
@@ -97,13 +64,12 @@ builder.Services
         };
     });
 
-
 builder.Services.AddTransient<AuditActionFilter>();
+
+ServiceValidatorConfiguration.AddValidatorConfiguration(builder.Services);
+
 builder.Services.AddScoped<IPasswordRepository, PasswordRepository>();
 builder.Services.AddScoped<IEncryptor, AesEncryptor>();
-builder.Services.AddScoped<IValidator<PasswordRequest>, PasswordRequestValidator>();
-builder.Services.AddScoped<IValidator<RegisterUserRequest>, RegisterUserRequestValidator>();
-builder.Services.AddScoped <IValidator<AuthenticateUserRequest>, AuthenticateUserRequestValidator>();
 
 
 builder.Services.AddMvc(options =>

@@ -7,8 +7,6 @@ using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.DbContexts;
 
-using System;
-
 namespace PassGuardia.Domain;
 
 public static class DomainServiceCollectionExtensions
