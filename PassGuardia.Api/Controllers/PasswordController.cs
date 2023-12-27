@@ -27,16 +27,11 @@ public class PasswordController : ControllerBase
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
-    public async Task<IActionResult> GetPassword([FromRoute] string id, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPassword([FromRoute] Guid id, CancellationToken cancellationToken = default)
     {
-        if (!Guid.TryParse(id, out _))
-        {
-            return BadRequest(new ErrorResponse { Errors = new[] { $"Invalid GUID format: {id}" } });
-        }
-
         GetPasswordByIdQuery query = new()
         {
-            Id = Guid.Parse(id)
+            Id = id
         };
 
         var result = await _mediator.Send(query, cancellationToken);

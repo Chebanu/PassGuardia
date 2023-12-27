@@ -1,12 +1,12 @@
 ﻿using MediatR;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using PassGuardia.Domain.Algorithm;
-using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Configuration;
+using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Repositories;
-using Microsoft.Extensions.Logging;
 
 namespace PassGuardia.Domain.Queries;
 
