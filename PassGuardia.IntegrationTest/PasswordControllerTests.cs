@@ -1,10 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-using PassGuardia.Api.Controllers;
 using PassGuardia.Contracts.Http;
 
 using Shouldly;

@@ -42,16 +42,16 @@ internal class RegisterUserCommandHandler : BaseRequestHandler<RegisterUserComma
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
-        if(!result.Succeeded)
+        if (!result.Succeeded)
         {
-            return new RegisterUserCommandResult 
+            return new RegisterUserCommandResult
             {
                 Success = false,
                 Errors = result.Errors
             };
         }
 
-        if(!await _roleManager.RoleExistsAsync(Roles.User))
+        if (!await _roleManager.RoleExistsAsync(Roles.User))
         {
             await _roleManager.CreateAsync(new IdentityRole(Roles.User));
         }

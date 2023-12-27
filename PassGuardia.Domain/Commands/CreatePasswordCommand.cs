@@ -1,13 +1,13 @@
 ﻿using MediatR;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Algorithm;
-using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Configuration;
+using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Repositories;
-using Microsoft.Extensions.Logging;
 
 namespace PassGuardia.Domain.Commands;
 
@@ -18,7 +18,7 @@ public class CreatePasswordCommand : IRequest<CreatePasswordResult>
 public class CreatePasswordResult
 {
     public Guid PasswordId { get; init; }
-    public string[] Errors  { get; set; }
+    public string[] Errors { get; set; }
 }
 public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>
 {
@@ -27,7 +27,7 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
     private readonly IOptionsMonitor<PassGuardiaConfig> _options;
 
     public CreatePasswordCommandHandler(IPasswordRepository repository,
-                                        IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options, 
+                                        IEncryptor encryptor, IOptionsMonitor<PassGuardiaConfig> options,
                                         ILogger<BaseRequestHandler<CreatePasswordCommand, CreatePasswordResult>> logger) : base(logger)
     {
         _repository = repository;

@@ -1,6 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Linq.Expressions;
 
-using System.Linq.Expressions;
+using FluentValidation;
 
 namespace PassGuardia.Api.Extensions;
 
@@ -24,7 +24,7 @@ internal static class AbstractValidatorExtensions
         validator.RuleFor(expression)
             .NotEmpty()
             .Length(8, 100)
-            .Must( x=> x == null || x.All(c => AllowedPasswordCharacters.Contains(c)))
+            .Must(x => x == null || x.All(c => AllowedPasswordCharacters.Contains(c)))
             .WithMessage($"Password must inly contain the following characters: {AllowedPasswordCharacters}");
     }
 }

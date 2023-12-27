@@ -1,7 +1,5 @@
 ﻿using System.Text;
 
-using Castle.Core.Logging;
-
 using FluentAssertions;
 
 using MediatR;
