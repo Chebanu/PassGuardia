@@ -28,7 +28,7 @@ internal class RegisterUserCommandHandler : BaseRequestHandler<RegisterUserComma
 
     public RegisterUserCommandHandler(UserManager<IdentityUser> userManager,
                                         RoleManager<IdentityRole> roleManager,
-                                        ILogger<BaseRequestHandler<RegisterUserCommand, RegisterUserCommandResult>> logger) : base(logger)
+                                        ILogger<RegisterUserCommandHandler> logger) : base(logger)
     {
         _userManager = userManager;
         _roleManager = roleManager;

@@ -13,6 +13,7 @@ namespace PassGuardia.Domain.Commands;
 
 public class CreatePasswordCommand : IRequest<CreatePasswordResult>
 {
+    public string User { get; init; }
     public string Password { get; init; }
 }
 public class CreatePasswordResult
@@ -44,7 +45,8 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
         var password = new Password
         {
             Id = Guid.NewGuid(),
-            EncryptedPassword = passwordAlgorithm
+            EncryptedPassword = passwordAlgorithm,
+            CreatedBy = request.User
         };
 
         _ = await _repository.CreatePassword(password, cancellationToken);

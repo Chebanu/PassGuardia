@@ -13,4 +13,8 @@ public class Password
     [Required]
     [Column("encrypted_password")]
     public byte[] EncryptedPassword { get; set; }
+
+    [Required]
+    [Column("created_by")]
+    public string CreatedBy { get; set; }
 }

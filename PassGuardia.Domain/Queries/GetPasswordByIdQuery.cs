@@ -13,6 +13,7 @@ namespace PassGuardia.Domain.Queries;
 public class GetPasswordByIdQuery : IRequest<GetPasswordByIdResult>
 {
     public Guid Id { get; init; }
+    public string User { get; init; }
 }
 
 public class GetPasswordByIdResult
@@ -40,7 +41,7 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
         var keyConfig = _options.CurrentValue;
         var dbPassword = await _repository.GetPasswordById(request.Id, cancellationToken);
 
-        if (dbPassword == null) return new GetPasswordByIdResult { Password = null };
+        if (dbPassword == null || dbPassword.CreatedBy != request.User) return new GetPasswordByIdResult { Password = null };
 
         var password = _encryptor.Decrypt(dbPassword.EncryptedPassword, keyConfig.EncryptionKey);
 

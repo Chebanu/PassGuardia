@@ -35,7 +35,7 @@ internal class AuthenticateUserCommandHandler : BaseRequestHandler<AuthenticateU
 
     public AuthenticateUserCommandHandler(UserManager<IdentityUser> userManager,
                                             IOptionsMonitor<JwtSettings> jwtOptions,
-                                            ILogger<BaseRequestHandler<AuthenticateUserCommand, AuthenticateUserCommandResult>> logger) : base(logger)
+                                            ILogger<AuthenticateUserCommandHandler> logger) : base(logger)
     {
         _userManager = userManager;
         _jwtOptions = jwtOptions;
@@ -79,8 +79,7 @@ internal class AuthenticateUserCommandHandler : BaseRequestHandler<AuthenticateU
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Name, user.UserName),
-            new(JwtRegisteredClaimNames.Sub, user.Id)
+            new Claim(JwtRegisteredClaimNames.Name, user.UserName)
         };
 
         foreach (var role in roles)

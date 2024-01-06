@@ -31,7 +31,7 @@ public class PasswordRepository : IPasswordRepository
 
     public Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default)
     {
-        return _dbPassword.Passwords.FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
+        return _dbPassword.Passwords.SingleOrDefaultAsync(f => f.Id == id, cancellationToken);
     }
 
     public async Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default)

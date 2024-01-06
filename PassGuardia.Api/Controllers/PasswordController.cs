@@ -2,10 +2,15 @@
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
+using PassGuardia.Api.Constants;
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Commands;
+using PassGuardia.Domain.DbContexts;
 using PassGuardia.Domain.Queries;
 
 namespace PassGuardia.Api.Controllers;
@@ -15,15 +20,18 @@ public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IValidator<PasswordRequest> _passwordValidator;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator)
+    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator, UserManager<IdentityUser> userManager)
     {
         _mediator = mediator;
         _passwordValidator = passwordValidator;
+        _userManager = userManager;
     }
 
     [HttpGet]
     [Route("{id}")]
+    [Authorize]
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
@@ -31,7 +39,8 @@ public class PasswordController : ControllerBase
     {
         GetPasswordByIdQuery query = new()
         {
-            Id = id
+            Id = id,
+            User = User.Identity.Name
         };
 
         var result = await _mediator.Send(query, cancellationToken);
@@ -46,6 +55,7 @@ public class PasswordController : ControllerBase
 
     [HttpPost]
     [Route("")]
+    [Authorize]
     [ProducesResponseType(typeof(CreatePasswordResult), 201)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     public async Task<IActionResult> CreatePassword([FromBody] PasswordRequest passwordRequest, CancellationToken cancellationToken = default)
@@ -62,6 +72,7 @@ public class PasswordController : ControllerBase
 
         CreatePasswordCommand command = new()
         {
+            User = User.Identity.Name,
             Password = passwordRequest.Password
         };
 

@@ -12,8 +12,8 @@ using PassGuardia.Domain.DbContexts;
 namespace PassGuardia.Domain.Migrations
 {
     [DbContext(typeof(PasswordDbContext))]
-    [Migration("20231222194803_Authentication")]
-    partial class Authentication
+    [Migration("20240104143048_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
