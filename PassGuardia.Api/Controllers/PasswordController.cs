@@ -73,7 +73,8 @@ public class PasswordController : ControllerBase
         CreatePasswordCommand command = new()
         {
             User = User.Identity.Name,
-            Password = passwordRequest.Password
+            Password = passwordRequest.Password,
+            IsPrivate = passwordRequest.IsPrivate
         };
 
         CreatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);

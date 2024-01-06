@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PassGuardia.Domain.DbContexts;
@@ -11,9 +12,11 @@ using PassGuardia.Domain.DbContexts;
 namespace PassGuardia.Domain.Migrations
 {
     [DbContext(typeof(PasswordDbContext))]
-    partial class PasswordDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240106170510_Add IsPrivate property")]
+    partial class AddIsPrivateproperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

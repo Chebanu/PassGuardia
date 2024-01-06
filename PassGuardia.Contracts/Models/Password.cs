@@ -15,6 +15,10 @@ public class Password
     public byte[] EncryptedPassword { get; set; }
 
     [Required]
+    [Column("Is_Private")]
+    public bool IsPrivate { get; set; }
+
+    [Required]
     [Column("created_by")]
     public string CreatedBy { get; set; }
 }

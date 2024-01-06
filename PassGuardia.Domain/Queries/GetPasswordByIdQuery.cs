@@ -41,7 +41,8 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
         var keyConfig = _options.CurrentValue;
         var dbPassword = await _repository.GetPasswordById(request.Id, cancellationToken);
 
-        if (dbPassword == null || dbPassword.CreatedBy != request.User) return new GetPasswordByIdResult { Password = null };
+        if (dbPassword == null || !(dbPassword.CreatedBy == request.User || (!dbPassword.IsPrivate && dbPassword.CreatedBy != request.User)))
+            return new GetPasswordByIdResult { Password = null };
 
         var password = _encryptor.Decrypt(dbPassword.EncryptedPassword, keyConfig.EncryptionKey);
 
