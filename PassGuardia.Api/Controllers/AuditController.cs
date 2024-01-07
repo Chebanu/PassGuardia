@@ -1,9 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using MediatR;
 
-using MediatR;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using PassGuardia.Api.Constants;
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Queries;
 
@@ -21,6 +21,7 @@ public class AuditController : ControllerBase
 
     [HttpGet]
     [Route("")]
+    [Authorize(Policy = AuthorizePolicies.Admin)]
     public async Task<IActionResult> GetAudits(CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(new GetAuditLogQuery(), cancellationToken);
