@@ -10,6 +10,7 @@ public interface IPasswordRepository
     Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default);
     Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default);
     Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default);
+    Task<List<Audit>> GetAudits(CancellationToken cancellationToken = default);
 }
 
 public class PasswordRepository : IPasswordRepository
@@ -40,5 +41,10 @@ public class PasswordRepository : IPasswordRepository
         await _dbPassword.SaveChangesAsync(cancellationToken);
 
         return audit;
+    }
+
+    public Task<List<Audit>> GetAudits(CancellationToken cancellationToken = default)
+    {
+        return _dbPassword.Audits.ToListAsync(cancellationToken);
     }
 }
