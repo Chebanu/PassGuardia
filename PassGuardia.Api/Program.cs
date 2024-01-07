@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using PassGuardia.Api.Constants;
-using PassGuardia.Api.Filters;
 using PassGuardia.Api.StartupExtensions;
 using PassGuardia.Domain;
 using PassGuardia.Domain.Algorithm;
@@ -97,18 +96,10 @@ builder.Services
         };
     });
 
-builder.Services.AddTransient<AuditActionFilter>();
-
 ServiceValidatorConfiguration.AddValidatorConfiguration(builder.Services);
 
 builder.Services.AddScoped<IPasswordRepository, PasswordRepository>();
 builder.Services.AddScoped<IEncryptor, AesEncryptor>();
-
-
-builder.Services.AddMvc(options =>
-{
-    options.Filters.Add(new ServiceFilterAttribute(typeof(AuditActionFilter)));
-});
 
 var app = builder.Build();
 
@@ -121,7 +112,10 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<RequestAuditMiddleware>();
+
 app.MapControllers();
+
 
 await app.RunAsync();
 
