@@ -63,9 +63,29 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 - status: `200`
 - response: `{ password: string }`
 
-#### Password Not Found
+#### Password Not Found Or Forbidden To Access
 
-- status: `404`
+- status: `400`
+- response: `{ errors: string[] }`
+
+### Update password
+
+- method: `PUT`
+- path: `/passwords/{passwordId}`
+- body: `{ visibility: enum { public, private } }`
+
+#### Password Updated
+
+- status: `204`
+
+#### Password To Update Not Found Or Forbidden To Access
+
+- status: `400`
+- response: `{ errors: string[] }`
+
+#### Update Password Validation Error Response
+
+- status: `400`
 - response: `{ errors: string[] }`
 
 ### Register user
@@ -101,7 +121,13 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 ### Get audit
 
 - method: `GET`
-- path: `/audit`
+- path: `/audit?pageNumber={pageNumber}&pageSize={pageSize}`
+- notes: `pageNumber and pageSize are optional (defaults are 1 and 100) and positive integers. Page size should be less than 1000.`
+
+#### Pagination Error
+
+- status: `400`
+- response: `{ errors: string[] }`
 
 #### Audit Found
 
