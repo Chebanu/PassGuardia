@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using PassGuardia.Api.Constants;
-using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Queries;
 
 namespace PassGuardia.Api.Controllers;
@@ -25,15 +24,6 @@ public class AuditController : ControllerBase
     public async Task<IActionResult> GetAudits(CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(new GetAuditLogQuery(), cancellationToken);
-
-        if(result == null)
-        {
-            return BadRequest(new ErrorResponse
-            {
-                Errors = ["Nothing has found"]
-            });
-        }
-
         return Ok(result);
     }
 }

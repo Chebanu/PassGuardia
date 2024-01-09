@@ -1,5 +1,7 @@
 ﻿using MediatR;
+
 using Microsoft.Extensions.Logging;
+
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Handlers;
 using PassGuardia.Domain.Repositories;
