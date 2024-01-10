@@ -3,12 +3,12 @@ using System.Security.Claims;
 using System.Text;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using PassGuardia.Api.Constants;
+using PassGuardia.Api.Filters;
 using PassGuardia.Api.StartupExtensions;
 using PassGuardia.Domain;
 using PassGuardia.Domain.Algorithm;

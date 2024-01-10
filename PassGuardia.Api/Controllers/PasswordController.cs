@@ -5,12 +5,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-using PassGuardia.Api.Constants;
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Commands;
-using PassGuardia.Domain.DbContexts;
 using PassGuardia.Domain.Queries;
 
 namespace PassGuardia.Api.Controllers;
@@ -20,13 +17,11 @@ public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IValidator<PasswordRequest> _passwordValidator;
-    private readonly UserManager<IdentityUser> _userManager;
 
-    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator, UserManager<IdentityUser> userManager)
+    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator)
     {
         _mediator = mediator;
         _passwordValidator = passwordValidator;
-        _userManager = userManager;
     }
 
     [HttpGet]

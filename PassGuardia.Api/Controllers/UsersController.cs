@@ -14,7 +14,7 @@ using PassGuardia.Domain.Commands;
 
 namespace PassGuardia.Api.Controllers;
 
-[Route("api/users")]
+[Route("users")]
 [ApiController]
 [Consumes(MediaTypeNames.Application.Json)]
 [Produces(MediaTypeNames.Application.Json)]
@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
         _adminUpdateUserValidator = adminUpdateUserValidator;
     }
 
-    [HttpPost("register")]
+    [HttpPost]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 500)]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request,
@@ -69,7 +69,7 @@ public class UsersController : ControllerBase
             });
     }
 
-    [HttpPost("token")]
+    [HttpPost("authenticate")]
     [ProducesResponseType(typeof(AuthenticateUserResponse), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 500)]
