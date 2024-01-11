@@ -25,10 +25,17 @@ public class AuditController : ControllerBase
 
     [HttpGet]
     [Route("")]
+    [Authorize(Policy = AuthorizePolicies.Admin)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 500)]
-    public async Task<IActionResult> GetAudit(AuditRequest auditRequest, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAudit(int pageNumber = 1, int pageSize = 100, CancellationToken cancellationToken = default)
     {
+        var auditRequest = new AuditRequest
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+
         var validationResult = await _auditValidator.ValidateAsync(auditRequest, cancellationToken);
         if (!validationResult.IsValid)
         {
