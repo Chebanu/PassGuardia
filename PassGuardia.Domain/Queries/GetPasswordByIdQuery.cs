@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Configuration;
 using PassGuardia.Domain.Handlers;
@@ -41,8 +42,13 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
         var keyConfig = _options.CurrentValue;
         var dbPassword = await _repository.GetPasswordById(request.Id, cancellationToken);
 
-        if (dbPassword == null || !(dbPassword.CreatedBy == request.User || (!dbPassword.IsPrivate && dbPassword.CreatedBy != request.User)))
+        if (dbPassword == null ||
+            !(dbPassword.CreatedBy == request.User ||
+            (dbPassword.GetVisibility == Visibility.Public &&
+            dbPassword.CreatedBy != request.User)))
+        {
             return new GetPasswordByIdResult { Password = null };
+        }
 
         var password = _encryptor.Decrypt(dbPassword.EncryptedPassword, keyConfig.EncryptionKey);
 

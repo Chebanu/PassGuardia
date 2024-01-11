@@ -42,7 +42,7 @@ public class PasswordController : ControllerBase
 
         if (result?.Password == null)
         {
-            return NotFound(new ErrorResponse { Errors = new[] { $"Password with id \"{id}\" not found" } });
+            return BadRequest(new ErrorResponse { Errors = new[] { $"Password Not Found Or Forbidden To Access" } });
         }
 
         return Ok(new PasswordResponse { Password = result.Password });
@@ -69,7 +69,7 @@ public class PasswordController : ControllerBase
         {
             User = User.Identity.Name,
             Password = passwordRequest.Password,
-            IsPrivate = passwordRequest.IsPrivate
+            GetVisibility = passwordRequest.GetVisibility
         };
 
         CreatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);

@@ -12,6 +12,7 @@ public static class ServiceValidatorConfiguration
         return services.AddScoped<IValidator<PasswordRequest>, PasswordRequestValidator>()
                         .AddScoped<IValidator<RegisterUserRequest>, RegisterUserRequestValidator>()
                         .AddScoped<IValidator<AuthenticateUserRequest>, AuthenticateUserRequestValidator>()
-                        .AddScoped<IValidator<AdminUpdateUserRequest>, AdminUpdateUserRequestValidator>();
+                        .AddScoped<IValidator<AdminUpdateUserRequest>, AdminUpdateUserRequestValidator>()
+                        .AddScoped<IValidator<AuditRequest>, AuditRequestValidator>();
     }
 }

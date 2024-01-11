@@ -15,7 +15,7 @@ public class CreatePasswordCommand : IRequest<CreatePasswordResult>
 {
     public string User { get; init; }
     public string Password { get; init; }
-    public bool IsPrivate { get; init; }
+    public Visibility GetVisibility { get; init; }
 }
 public class CreatePasswordResult
 {
@@ -48,7 +48,7 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
             Id = Guid.NewGuid(),
             EncryptedPassword = passwordAlgorithm,
             CreatedBy = request.User,
-            IsPrivate = request.IsPrivate
+            GetVisibility = request.GetVisibility
         };
 
         _ = await _repository.CreatePassword(password, cancellationToken);

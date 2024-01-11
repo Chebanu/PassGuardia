@@ -14,7 +14,7 @@ public class PasswordRequestValidator : AbstractValidator<PasswordRequest>
             .Length(1, 100)
             .WithMessage("Your password must be in the 1-100 character range");
 
-        RuleFor(x => x.IsPrivate).NotNull();
+        RuleFor(x => x.GetVisibility).NotNull();
 
     }
 }

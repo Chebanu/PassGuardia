@@ -12,7 +12,7 @@ using PassGuardia.Domain.DbContexts;
 namespace PassGuardia.Domain.Migrations
 {
     [DbContext(typeof(PasswordDbContext))]
-    [Migration("20240104143048_Initial")]
+    [Migration("20240111013820_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -262,10 +262,19 @@ namespace PassGuardia.Domain.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("created_by");
+
                     b.Property<byte[]>("EncryptedPassword")
                         .IsRequired()
                         .HasColumnType("bytea")
                         .HasColumnName("encrypted_password");
+
+                    b.Property<int>("GetVisibility")
+                        .HasColumnType("integer")
+                        .HasColumnName("visibility");
 
                     b.HasKey("Id");
 

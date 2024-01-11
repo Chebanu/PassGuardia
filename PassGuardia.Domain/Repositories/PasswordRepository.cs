@@ -10,7 +10,7 @@ public interface IPasswordRepository
     Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default);
     Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default);
     Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default);
-    Task<List<Audit>> GetAudits(CancellationToken cancellationToken = default);
+    Task<List<Audit>> GetAudits(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 }
 
 public class PasswordRepository : IPasswordRepository
@@ -43,8 +43,12 @@ public class PasswordRepository : IPasswordRepository
         return audit;
     }
 
-    public Task<List<Audit>> GetAudits(CancellationToken cancellationToken = default)
+    public Task<List<Audit>> GetAudits(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
-        return _dbPassword.Audits.ToListAsync(cancellationToken);
+        return _dbPassword.Audits
+                    .OrderByDescending(desc => desc.Id)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync(cancellationToken);
     }
 }

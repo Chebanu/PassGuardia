@@ -37,6 +37,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Route("")]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 500)]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request,
@@ -59,14 +60,18 @@ public class UsersController : ControllerBase
 
         var result = await _mediator.Send(command, cancellationToken);
 
-        return !result.Success ? BadRequest(new ErrorResponse
+        if (!result.Success)
         {
-            Errors = result.Errors.Select(x => x.Description).ToArray()
-        })
-            : Ok(new RegisterUserResponse
+            return BadRequest(new ErrorResponse
             {
-                UserId = result.UserId
+                Errors = result.Errors.Select(x => x.Description).ToArray()
             });
+        }
+
+        return Created($"{request.Username} username has been created", new RegisterUserResponse
+        {
+            UserId = result.UserId
+        });
     }
 
     [HttpPost("authenticate")]

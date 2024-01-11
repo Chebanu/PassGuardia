@@ -1,7 +1,9 @@
-﻿namespace PassGuardia.Contracts.Http;
+﻿using PassGuardia.Contracts.Models;
+
+namespace PassGuardia.Contracts.Http;
 
 public class PasswordRequest
 {
-    public string Password { get; set; }
-    public bool IsPrivate { get; set; }
+    public string Password { get; init; }
+    public Visibility GetVisibility { get; init; }
 }

@@ -269,9 +269,9 @@ namespace PassGuardia.Domain.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("encrypted_password");
 
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("boolean")
-                        .HasColumnName("Is_Private");
+                    b.Property<int>("GetVisibility")
+                        .HasColumnType("integer")
+                        .HasColumnName("visibility");
 
                     b.HasKey("Id");
 
