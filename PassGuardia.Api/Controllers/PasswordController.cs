@@ -26,16 +26,17 @@ public class PasswordController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    [Authorize]
     [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
     public async Task<IActionResult> GetPassword([FromRoute] Guid id, CancellationToken cancellationToken = default)
     {
+        var username = HttpContext.User.Identity?.Name;
+
         GetPasswordByIdQuery query = new()
         {
             Id = id,
-            User = User.Identity.Name
+            User = username
         };
 
         var result = await _mediator.Send(query, cancellationToken);
