@@ -1,14 +1,10 @@
 ﻿using Bogus;
-
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-
 using PassGuardia.Contracts.Http;
-
+using PassGuardia.Domain.Constants;
+using PassGuardia.IntegrationTest;
 using Xunit;
-
-namespace PassGuardia.IntegrationTest;
 
 internal class UserInfo
 {
@@ -19,13 +15,14 @@ internal class UserInfo
     public string Token { get; init; }
 }
 
-public  class Base : IClassFixture<WebApplicationFactory<Program>>, IDisposable
+[Collection("IntegrationTests")]
+public class Base : IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
 {
     protected readonly Faker _faker;
     private protected readonly IApiClient _apiClient;
     private readonly IServiceScope _scope;
 
-    public Base(WebApplicationFactory<Program> factory)
+    public Base(CustomWebApplicationFactory<Program> factory)
     {
         _apiClient = new ApiClient(factory.CreateClient());
         _scope = factory.Services.CreateScope();
@@ -47,17 +44,47 @@ public  class Base : IClassFixture<WebApplicationFactory<Program>>, IDisposable
         }
     }
 
-    private protected async Task<UserInfo> CreateTestUser(string role = "user")
+    private protected async Task<UserInfo> CreateTestUser(string role = Roles.User)
     {
+        // 1. registration
         var registrationRequest = new RegisterUserRequest
         {
-            Username = $"t_{_faker.Database.Random.Uuid():N}",
-            Password = $"Ab1!_{_faker.Internet.Password()}"
+            Username = $"test_{_faker.Database.Random.Uuid()}".Replace("-", "").Substring(0, 15),
+            Password = $"Aa1!_{_faker.Internet.Password()}"
         };
-
         var registrationResponse = await _apiClient.RegisterUser(registrationRequest);
 
-        var roleManager = _scope.ServiceProvider.GetRequiredService<RoleManger<IdentityRole>>();
-    }
+        // 2. role assignment
+        var roleManager = _scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        var userManager = _scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
+        var user = await userManager.FindByNameAsync(registrationRequest.Username);
+        var roles = await userManager.GetRolesAsync(user);
+        if (!roles.Contains(role))
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+
+            await userManager.RemoveFromRolesAsync(user, roles);
+            await userManager.AddToRoleAsync(user, role);
+        }
+
+        // 3. authentication
+        var authenticateResponse = await _apiClient.AuthenticateUser(new AuthenticateUserRequest
+        {
+            Username = registrationRequest.Username,
+            Password = registrationRequest.Password
+        });
+
+        return new UserInfo
+        {
+            Id = registrationResponse.UserId,
+            Username = registrationRequest.Username,
+            Password = registrationRequest.Password,
+            Role = role,
+            Token = authenticateResponse.Token
+        };
+    }
 }
