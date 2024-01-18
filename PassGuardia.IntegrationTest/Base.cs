@@ -47,18 +47,18 @@ public class Base : IClassFixture<CustomWebApplicationFactory<Program>>, IDispos
     private protected async Task<UserInfo> CreateTestUser(string role = Roles.User)
     {
         // 1. registration
-        var registrationRequest = new RegisterUserRequest
+        var registerRequest = new RegisterUserRequest
         {
             Username = $"test_{_faker.Database.Random.Uuid()}".Replace("-", "").Substring(0, 15),
             Password = $"Aa1!_{_faker.Internet.Password()}"
         };
-        var registrationResponse = await _apiClient.RegisterUser(registrationRequest);
+        var registrationResponse = await _apiClient.RegisterUser(registerRequest);
 
         // 2. role assignment
         var roleManager = _scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = _scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-        var user = await userManager.FindByNameAsync(registrationRequest.Username);
+        var user = await userManager.FindByNameAsync(registerRequest.Username);
         var roles = await userManager.GetRolesAsync(user);
         if (!roles.Contains(role))
         {
@@ -74,15 +74,15 @@ public class Base : IClassFixture<CustomWebApplicationFactory<Program>>, IDispos
         // 3. authentication
         var authenticateResponse = await _apiClient.AuthenticateUser(new AuthenticateUserRequest
         {
-            Username = registrationRequest.Username,
-            Password = registrationRequest.Password
+            Username = registerRequest.Username,
+            Password = registerRequest.Password
         });
 
         return new UserInfo
         {
             Id = registrationResponse.UserId,
-            Username = registrationRequest.Username,
-            Password = registrationRequest.Password,
+            Username = registerRequest.Username,
+            Password = registerRequest.Password,
             Role = role,
             Token = authenticateResponse.Token
         };

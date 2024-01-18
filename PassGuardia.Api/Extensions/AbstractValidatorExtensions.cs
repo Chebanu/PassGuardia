@@ -8,7 +8,7 @@ internal static class AbstractValidatorExtensions
 {
     public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
 
-    public const string AllowedPasswordCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+";
+    public const string AllowedPasswordCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+?.,";
 
     public static void RuleForUsername<T>(this AbstractValidator<T> validator, Expression<Func<T, string>> expression)
     {
@@ -25,6 +25,6 @@ internal static class AbstractValidatorExtensions
             .NotEmpty()
             .Length(8, 100)
             .Must(x => x == null || x.All(c => AllowedPasswordCharacters.Contains(c)))
-            .WithMessage($"Password must inly contain the following characters: {AllowedPasswordCharacters}");
+            .WithMessage($"Password must only contain the following characters: {AllowedPasswordCharacters}");
     }
 }
