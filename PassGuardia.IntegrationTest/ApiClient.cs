@@ -9,7 +9,6 @@ namespace PassGuardia.IntegrationTest;
 internal interface IApiClient : IDisposable
 {
     Task<CreatePasswordResult> CreatePassword(PasswordRequest passwordRequest, string token);
-    Task<CreatePasswordResult> CreatePassword(PasswordRequest passwordRequest);
     Task<GetPasswordByIdResult> GetPassword(string passwordId);
     Task<GetPasswordByIdResult> GetPassword(string passwordId, string token);
     Task<RegisterUserResponse> RegisterUser(RegisterUserRequest registerUserRequest);
@@ -55,16 +54,6 @@ internal class ApiClient : IApiClient
             .Request()
             .AppendPathSegment("passwords")
             .WithOAuthBearerToken(token)
-            .AllowHttpStatus(201)
-            .PostJsonAsync(passwordRequest)
-            .ReceiveJson<CreatePasswordResult>();
-    }
-
-    public Task<CreatePasswordResult> CreatePassword(PasswordRequest passwordRequest)
-    {
-        return _client
-            .Request()
-            .AppendPathSegment("passwords")
             .AllowHttpStatus(201)
             .PostJsonAsync(passwordRequest)
             .ReceiveJson<CreatePasswordResult>();

@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Net;
+﻿using System.Net;
 
 using FluentAssertions;
 
@@ -18,7 +17,7 @@ namespace PassGuardia.IntegrationTest;
 public class PasswordTests : Base
 {
     public PasswordTests(CustomWebApplicationFactory<Program> factory) : base(factory)
-    {        
+    {
     }
 
     #region CreatePassword
@@ -33,7 +32,7 @@ public class PasswordTests : Base
     [InlineData("details with emoji 🤓")]
     public async Task CreateUserPasswordShouldDoIt(string password)
     {
-        var createdPassword = await CreatePassword(password, Roles.User, Visibility.Private);
+        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
 
         createdPassword.Should().NotBeNull();
         createdPassword.PasswordId.Should().ShouldNotBeNull();
@@ -50,7 +49,7 @@ public class PasswordTests : Base
     [InlineData("details with emoji 🤓")]
     public async Task CreateAdminPasswordShouldDoIt(string password)
     {
-        var createdPassword = await CreatePassword(password, Roles.Admin, Visibility.Private);
+        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.Admin, Visibility.Private);
 
         createdPassword.Should().NotBeNull();
         createdPassword.PasswordId.Should().ShouldNotBeNull();
@@ -64,7 +63,7 @@ public class PasswordTests : Base
     {
         try
         {
-            var result = await CreatePassword(password, Roles.User, Visibility.Private);
+            var result = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
 
             Assert.Fail("Should have thrown FlurtHttpException");
         }
@@ -79,37 +78,15 @@ public class PasswordTests : Base
         }
     }
 
-    //TODO
-    [Theory]
-    [InlineData("Unauthorized")]
-    public async Task CreatePasswordShouldBeUnauthorized(string password)
-    {
-        try
-        {
-            var result = await _apiClient.CreatePassword(new PasswordRequest
-            {
-                Password = password
-            });
-
-            Assert.Fail("Should have thrown FlurtHttpException");
-        }
-        catch(FlurlHttpException ex)
-        {
-            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.Unauthorized);
-
-            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
-
-            result.Should().NotBeNull();
-        }
-    }
-
     #endregion
 
+
+    #region GetPassword
     [Theory]
     [InlineData(";D")]
     public async Task GetPublicPasswordForAuthUserShouldDoIt(string password)
     {
-        var createdPassword = await CreatePassword(password, Roles.User, Visibility.Public);
+        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Public);
 
         var user2 = await CreateTestUser(Roles.User);
 
@@ -123,7 +100,7 @@ public class PasswordTests : Base
     [InlineData("^_~")]
     public async Task GetPublicPasswordForAnonymousShouldDoIt(string password)
     {
-        var createdPassword = await CreatePassword(password, Roles.User, Visibility.Public);
+        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Public);
 
         var getPassword = await _apiClient.GetPassword(createdPassword.PasswordId.ToString());
 
@@ -135,7 +112,7 @@ public class PasswordTests : Base
     [InlineData("^_^")]
     public async Task GetPrivatePasswordForAnotherUserShouldGetException(string password)
     {
-        var createdPassword = await CreatePassword(password, Roles.User, Visibility.Private);
+        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
 
         var user2 = await CreateTestUser(Roles.User);
 
@@ -154,14 +131,76 @@ public class PasswordTests : Base
             result.Should().NotBeNull();
             result.Errors.Should().HaveCount(1);
         }
-
     }
 
-    private async Task<CreatePasswordResult> CreatePassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
+    [Theory]
+    [InlineData("^_^")]
+    public async Task GetPrivatePasswordForAnAuthorizatedUserShouldGetException(string password)
+    {
+        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
+
+        try
+        {
+            var getPassword = await _apiClient.GetPassword(createdPassword.PasswordId.ToString());
+
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+
+    [Fact]
+    public async Task GetNonExistentPasswordShouldGetException()
+    {
+        try
+        {
+            var getPassword = await _apiClient.GetPassword(Guid.NewGuid().ToString());
+
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+
+    [Theory]
+    [InlineData("invalid-guid-format")]
+    public async Task GetPasswordShouldReturnBadRequestForInvalidId(string id)
+    {
+        try
+        {
+            var getPassword = await _apiClient.GetPassword(id);
+
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+
+    #endregion
+
+    private async Task<CreatePasswordResult> CreateUserAndUser_sPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
     {
         var user = await CreateTestUser(role);
 
-        return  await _apiClient.CreatePassword(new PasswordRequest
+        return await _apiClient.CreatePassword(new PasswordRequest
         {
             Password = password,
             GetVisibility = visibility
