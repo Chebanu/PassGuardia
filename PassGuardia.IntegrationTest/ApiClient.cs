@@ -14,7 +14,8 @@ internal interface IApiClient : IDisposable
     Task<RegisterUserResponse> RegisterUser(RegisterUserRequest registerUserRequest);
     Task<AuthenticateUserResponse> AuthenticateUser(AuthenticateUserRequest authenticateUserRequest);
     Task<MeResponse> Me(string token);
-    Task AdminUpdate(AdminUpdateUserCommand adminUpdateCommand, string token); 
+    Task AdminUpdate(AdminUpdateUserCommand adminUpdateCommand, string token);
+    Task<GetAuditLogResult> GetAudit(GetAuditLogQuery query, string token);
 }
 
 internal class ApiClient : IApiClient
@@ -62,6 +63,16 @@ internal class ApiClient : IApiClient
     public void Dispose()
     {
         _client?.Dispose();
+    }
+
+    public Task<GetAuditLogResult> GetAudit(GetAuditLogQuery query, string token)
+    {
+        return _client
+            .Request()
+            .AppendPathSegment("audit")
+            .WithOAuthBearerToken(token)
+            .AllowHttpStatus(200)
+            .GetJsonAsync<GetAuditLogResult>();
     }
 
     public Task<GetPasswordByIdResult> GetPassword(string passwordId)

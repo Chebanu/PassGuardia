@@ -137,7 +137,4 @@ public class UsersTests : Base
             responseContent.Errors.First().Should().Be("Invalid username or password.");
         }
     }
-
-
-
 }

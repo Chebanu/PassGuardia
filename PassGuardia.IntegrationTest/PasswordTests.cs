@@ -30,6 +30,7 @@ public class PasswordTests : Base
     [InlineData("details with spaces")]
     [InlineData("details with punctuation.")]
     [InlineData("details with emoji 🤓")]
+    [InlineData(" ")]
     public async Task CreateUserPasswordShouldDoIt(string password)
     {
         var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
@@ -47,6 +48,7 @@ public class PasswordTests : Base
     [InlineData("details with spaces")]
     [InlineData("details with punctuation.")]
     [InlineData("details with emoji 🤓")]
+    [InlineData(" ")]
     public async Task CreateAdminPasswordShouldDoIt(string password)
     {
         var createdPassword = await CreateUserAndUser_sPassword(password, Roles.Admin, Visibility.Private);
@@ -88,7 +90,7 @@ public class PasswordTests : Base
     {
         var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Public);
 
-        var user2 = await CreateTestUser(Roles.User);
+        var user2 = await CreateTestRole(Roles.User);
 
         var getPassword = await _apiClient.GetPassword(createdPassword.PasswordId.ToString(), user2.Token);
 
@@ -114,7 +116,7 @@ public class PasswordTests : Base
     {
         var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
 
-        var user2 = await CreateTestUser(Roles.User);
+        var user2 = await CreateTestRole(Roles.User);
 
         try
         {
@@ -198,7 +200,7 @@ public class PasswordTests : Base
 
     private async Task<CreatePasswordResult> CreateUserAndUser_sPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
     {
-        var user = await CreateTestUser(role);
+        var user = await CreateTestRole(role);
 
         return await _apiClient.CreatePassword(new PasswordRequest
         {
@@ -207,13 +209,3 @@ public class PasswordTests : Base
         }, user.Token);
     }
 }
-
-/*
- * Пароль создать авториз
- * Феил пароль создать без автор
- * 
- * Получить приватный пароль с автор 1
- * Получить публичный пароль с автор 2
- * Получить публичный пароль без автор 0
- * 
- */

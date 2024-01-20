@@ -44,7 +44,7 @@ public class Base : IClassFixture<CustomWebApplicationFactory<Program>>, IDispos
         }
     }
 
-    private protected async Task<UserInfo> CreateTestUser(string role = Roles.User)
+    private protected async Task<UserInfo> CreateTestRole(string role = Roles.User)
     {
         // 1. registration
         var registerRequest = new RegisterUserRequest
