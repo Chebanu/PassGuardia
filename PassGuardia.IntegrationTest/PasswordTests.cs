@@ -198,6 +198,160 @@ public class PasswordTests : Base
 
     #endregion
 
+    #region UpdatePasswordVisibility
+    [Theory]
+    [InlineData("helloWorld")]
+    public async Task UpdatePasswordVisibilityShouldDoIt(string password)
+    {
+        var user = await CreateTestRole(Roles.User);
+        var createdPassword = await _apiClient.CreatePassword(new PasswordRequest
+        {
+            Password = password,
+            GetVisibility = Visibility.Private
+        }, user.Token);
+
+        var updRequest = new UpdatePasswordVisibilityRequest
+        {
+            Id = createdPassword.PasswordId,
+            GetVisibility = Visibility.Public
+        };
+
+        await _apiClient.UpdatePasswordVisibility(updRequest, user.Token);
+
+        var getUpdatedPassword = await _apiClient.GetPassword(createdPassword.PasswordId.ToString());
+
+        getUpdatedPassword.GetVisibility.Should().Be(updRequest.GetVisibility);
+    }
+
+    [Theory]
+    [InlineData("helloWorld")]
+    public async Task UpdatePasswordWithNonOwnerRole_User_ShouldThrownException(string password)
+    {
+        var user = await CreateTestRole(Roles.User);
+        var createdPassword = await _apiClient.CreatePassword(new PasswordRequest
+        {
+            Password = password,
+            GetVisibility = Visibility.Private
+        }, user.Token);
+
+        var updRequest = new UpdatePasswordVisibilityRequest
+        {
+            Id = createdPassword.PasswordId,
+            GetVisibility = Visibility.Public
+        };
+
+        var user2 = await CreateTestRole(Roles.User);
+
+        try
+        {
+            await _apiClient.UpdatePasswordVisibility(updRequest, user2.Token);
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+
+    [Theory]
+    [InlineData("helloWorld")]
+    public async Task UpdatePasswordWithNonOwnerRole_Admin_ShouldThrownException(string password)
+    {
+        var user = await CreateTestRole(Roles.User);
+        var createdPassword = await _apiClient.CreatePassword(new PasswordRequest
+        {
+            Password = password,
+            GetVisibility = Visibility.Private
+        }, user.Token);
+
+        var updRequest = new UpdatePasswordVisibilityRequest
+        {
+            Id = createdPassword.PasswordId,
+            GetVisibility = Visibility.Public
+        };
+
+        var admin = await CreateTestRole(Roles.User);
+
+        try
+        {
+            await _apiClient.UpdatePasswordVisibility(updRequest, admin.Token);
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+
+    [Theory]
+    [InlineData("helloWorld")]
+    public async Task UpdatePasswordVisibilityOfTheSameVisibilityShouldReturnBadRequest(string password)
+    {
+        var user = await CreateTestRole(Roles.User);
+        var createdPassword = await _apiClient.CreatePassword(new PasswordRequest
+        {
+            Password = password,
+            GetVisibility = Visibility.Private
+        }, user.Token);
+
+        try
+        {
+            var updRequest = new UpdatePasswordVisibilityRequest
+            {
+                Id = createdPassword.PasswordId,
+                GetVisibility = Visibility.Private
+            };
+
+            await _apiClient.UpdatePasswordVisibility(updRequest, user.Token);
+
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+
+    [Fact]
+    public async Task UpdatePasswordShouldReturnBadRequestDueToUnknownGuid()
+    {
+        var user = await CreateTestRole(Roles.User);
+
+        try
+        {
+            var updRequest = new UpdatePasswordVisibilityRequest
+            {
+                Id = Guid.NewGuid(),
+                GetVisibility = Visibility.Private
+            };
+
+            await _apiClient.UpdatePasswordVisibility(updRequest, user.Token);
+
+            Assert.Fail("Should have thrown FlurtException");
+        }
+        catch (FlurlHttpException ex)
+        {
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Should().NotBeNull();
+        }
+    }
+    #endregion
+
     private async Task<CreatePasswordResult> CreateUserAndUser_sPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
     {
         var user = await CreateTestRole(role);

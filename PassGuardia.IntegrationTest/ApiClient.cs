@@ -11,6 +11,7 @@ internal interface IApiClient : IDisposable
     Task<CreatePasswordResult> CreatePassword(PasswordRequest passwordRequest, string token);
     Task<GetPasswordByIdResult> GetPassword(string passwordId);
     Task<GetPasswordByIdResult> GetPassword(string passwordId, string token);
+    Task UpdatePasswordVisibility(UpdatePasswordVisibilityRequest updPasswordVisibility, string token);
     Task<RegisterUserResponse> RegisterUser(RegisterUserRequest registerUserRequest);
     Task<AuthenticateUserResponse> AuthenticateUser(AuthenticateUserRequest authenticateUserRequest);
     Task<MeResponse> Me(string token);
@@ -55,7 +56,7 @@ internal class ApiClient : IApiClient
             .Request()
             .AppendPathSegment("passwords")
             .WithOAuthBearerToken(token)
-            .AllowHttpStatus(201)
+            .AllowHttpStatus(204)
             .PostJsonAsync(passwordRequest)
             .ReceiveJson<CreatePasswordResult>();
     }
@@ -94,6 +95,16 @@ internal class ApiClient : IApiClient
             .WithOAuthBearerToken(token)
             .AllowHttpStatus(200)
             .GetJsonAsync<GetPasswordByIdResult>();
+    }
+    public Task UpdatePasswordVisibility(UpdatePasswordVisibilityRequest updPasswordVisibility,
+                                                                           string token)
+    {
+        return _client
+            .Request()
+            .AppendPathSegment("passwords")
+            .WithOAuthBearerToken(token)
+            .AllowHttpStatus(204)
+            .PutJsonAsync(updPasswordVisibility);
     }
 
     public Task<MeResponse> Me(string token)
