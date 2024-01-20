@@ -20,6 +20,7 @@ public class GetPasswordByIdQuery : IRequest<GetPasswordByIdResult>
 public class GetPasswordByIdResult
 {
     public string Password { get; init; }
+    public Visibility GetVisibility { get; init; }
 }
 
 public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>
@@ -39,7 +40,6 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
 
     protected override async Task<GetPasswordByIdResult> HandleInternal(GetPasswordByIdQuery request, CancellationToken cancellationToken)
     {
-        var keyConfig = _options.CurrentValue;
         var dbPassword = await _repository.GetPasswordById(request.Id, cancellationToken);
 
         if (dbPassword == null ||
@@ -50,8 +50,12 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
             return new GetPasswordByIdResult { Password = null };
         }
 
-        var password = _encryptor.Decrypt(dbPassword.EncryptedPassword, keyConfig.EncryptionKey);
+        var password = _encryptor.Decrypt(dbPassword.EncryptedPassword, _options.CurrentValue.EncryptionKey);
 
-        return new GetPasswordByIdResult { Password = password };
+        return new GetPasswordByIdResult
+        {
+            Password = password,
+            GetVisibility = dbPassword.GetVisibility
+        };
     }
 }

@@ -9,6 +9,7 @@ public interface IPasswordRepository
 {
     Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default);
     Task<Password> GetPasswordById(Guid id, CancellationToken cancellationToken = default);
+    Task<Password> UpdatePasswordVisibility(Password password, CancellationToken cancellationToken = default);
     Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default);
     Task<List<Audit>> GetAudits(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 }
@@ -24,8 +25,8 @@ public class PasswordRepository : IPasswordRepository
 
     public async Task<Password> CreatePassword(Password password, CancellationToken cancellationToken = default)
     {
-        await _dbPassword.Passwords.AddAsync(password, cancellationToken);
-        await _dbPassword.SaveChangesAsync(cancellationToken);
+        _ = await _dbPassword.Passwords.AddAsync(password, cancellationToken);
+        _ = await _dbPassword.SaveChangesAsync(cancellationToken);
 
         return password;
     }
@@ -35,10 +36,18 @@ public class PasswordRepository : IPasswordRepository
         return _dbPassword.Passwords.SingleOrDefaultAsync(f => f.Id == id, cancellationToken);
     }
 
+    public async Task<Password> UpdatePasswordVisibility(Password password, CancellationToken cancellationToken = default)
+    {
+        _ = _dbPassword.Update(password);
+        _ = await _dbPassword.SaveChangesAsync(cancellationToken);
+
+        return password;
+    }
+
     public async Task<Audit> CreateAudit(Audit audit, CancellationToken cancellationToken = default)
     {
-        await _dbPassword.Audits.AddAsync(audit, cancellationToken);
-        await _dbPassword.SaveChangesAsync(cancellationToken);
+        _ = await _dbPassword.Audits.AddAsync(audit, cancellationToken);
+        _ = await _dbPassword.SaveChangesAsync(cancellationToken);
 
         return audit;
     }

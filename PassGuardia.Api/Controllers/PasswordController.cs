@@ -16,11 +16,14 @@ public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IValidator<PasswordRequest> _passwordValidator;
+    private readonly IValidator<UpdatePasswordVisibilityRequest> _updPasswordValidator;
 
-    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator)
+    public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator,
+                                IValidator<UpdatePasswordVisibilityRequest> updPasswordValidator)
     {
         _mediator = mediator;
         _passwordValidator = passwordValidator;
+        _updPasswordValidator = updPasswordValidator;
     }
 
     [HttpGet]
@@ -45,7 +48,7 @@ public class PasswordController : ControllerBase
             return BadRequest(new ErrorResponse { Errors = new[] { $"Password Not Found Or Forbidden To Access" } });
         }
 
-        return Ok(new PasswordResponse { Password = result.Password });
+        return Ok(new PasswordResponse { Password = result.Password, GetVisibility = result.GetVisibility });
     }
 
     [HttpPost]
@@ -78,5 +81,38 @@ public class PasswordController : ControllerBase
         {
             PasswordId = passwordResult.PasswordId
         });
+    }
+
+    [HttpPut]
+    [Route("")]
+    [Authorize]
+    [ProducesResponseType(typeof(CreatePasswordResult), 200)]
+    [ProducesResponseType(typeof(ErrorResponse), 400)]
+    public async Task<IActionResult> UpdatePasswordVisibility([FromBody] UpdatePasswordVisibilityRequest updatePassword,
+                                                                        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await _updPasswordValidator.ValidateAsync(updatePassword, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(new ErrorResponse
+            {
+                Errors = validationResult.Errors.Select(e => e.ErrorMessage).ToArray()
+            });
+        }
+        UpdatePasswordVisibilityCommand command = new()
+        {
+            User = User.Identity.Name,
+            PasswordVisibility = updatePassword
+        };
+
+        UpdatePasswordVisibilityResult passwordResult = await _mediator.Send(command, cancellationToken);
+
+        return !passwordResult.Success ?
+            BadRequest(new ErrorResponse
+            {
+                Errors = passwordResult.Errors
+            })
+            : NoContent();
     }
 }
