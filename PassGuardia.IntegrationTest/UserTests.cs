@@ -6,6 +6,7 @@ using Flurl.Http;
 
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Constants;
+
 using Xunit;
 
 namespace PassGuardia.IntegrationTest;

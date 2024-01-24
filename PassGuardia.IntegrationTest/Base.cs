@@ -1,9 +1,12 @@
 ﻿using Bogus;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+
 using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Constants;
 using PassGuardia.IntegrationTest;
+
 using Xunit;
 
 internal class UserInfo

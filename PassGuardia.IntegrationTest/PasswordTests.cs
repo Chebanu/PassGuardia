@@ -2,6 +2,8 @@
 
 using FluentAssertions;
 
+using Flurl.Http;
+
 using PassGuardia.Contracts.Http;
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Commands;
@@ -10,7 +12,6 @@ using PassGuardia.Domain.Constants;
 using Shouldly;
 
 using Xunit;
-using Flurl.Http;
 
 namespace PassGuardia.IntegrationTest;
 
@@ -33,7 +34,7 @@ public class PasswordTests : Base
     [InlineData(" ")]
     public async Task CreateUserPasswordShouldDoIt(string password)
     {
-        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
+        var createdPassword = await CreateUserAndUsersPassword(password, Roles.User, Visibility.Private);
 
         createdPassword.Should().NotBeNull();
         createdPassword.PasswordId.Should().ShouldNotBeNull();
@@ -51,7 +52,7 @@ public class PasswordTests : Base
     [InlineData(" ")]
     public async Task CreateAdminPasswordShouldDoIt(string password)
     {
-        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.Admin, Visibility.Private);
+        var createdPassword = await CreateUserAndUsersPassword(password, Roles.Admin, Visibility.Private);
 
         createdPassword.Should().NotBeNull();
         createdPassword.PasswordId.Should().ShouldNotBeNull();
@@ -65,7 +66,7 @@ public class PasswordTests : Base
     {
         try
         {
-            var result = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
+            var result = await CreateUserAndUsersPassword(password, Roles.User, Visibility.Private);
 
             Assert.Fail("Should have thrown FlurtHttpException");
         }
@@ -88,7 +89,7 @@ public class PasswordTests : Base
     [InlineData(";D")]
     public async Task GetPublicPasswordForAuthUserShouldDoIt(string password)
     {
-        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Public);
+        var createdPassword = await CreateUserAndUsersPassword(password, Roles.User, Visibility.Public);
 
         var user2 = await CreateTestRole(Roles.User);
 
@@ -102,7 +103,7 @@ public class PasswordTests : Base
     [InlineData("^_~")]
     public async Task GetPublicPasswordForAnonymousShouldDoIt(string password)
     {
-        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Public);
+        var createdPassword = await CreateUserAndUsersPassword(password, Roles.User, Visibility.Public);
 
         var getPassword = await _apiClient.GetPassword(createdPassword.PasswordId.ToString());
 
@@ -114,7 +115,7 @@ public class PasswordTests : Base
     [InlineData("^_^")]
     public async Task GetPrivatePasswordForAnotherUserShouldGetException(string password)
     {
-        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
+        var createdPassword = await CreateUserAndUsersPassword(password, Roles.User, Visibility.Private);
 
         var user2 = await CreateTestRole(Roles.User);
 
@@ -137,9 +138,9 @@ public class PasswordTests : Base
 
     [Theory]
     [InlineData("^_^")]
-    public async Task GetPrivatePasswordForAnAuthorizatedUserShouldGetException(string password)
+    public async Task GetPrivatePasswordForUnauthorizatedUserShouldGetException(string password)
     {
-        var createdPassword = await CreateUserAndUser_sPassword(password, Roles.User, Visibility.Private);
+        var createdPassword = await CreateUserAndUsersPassword(password, Roles.User, Visibility.Private);
 
         try
         {
@@ -352,7 +353,7 @@ public class PasswordTests : Base
     }
     #endregion
 
-    private async Task<CreatePasswordResult> CreateUserAndUser_sPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
+    private async Task<CreatePasswordResult> CreateUserAndUsersPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
     {
         var user = await CreateTestRole(role);
 
