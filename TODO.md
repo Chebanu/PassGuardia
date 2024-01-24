@@ -1,4 +1,5 @@
-1. align with the requirements
-2. implement integrations tests
-3. implement pagination in audit
-4. update password visibility. only owners can update passwords visibility
+1. split models between different layers
+2. finish swagger documentation
+3. update integration tests to check errors
+4. align contracts with README.md
+5. shared passwords
