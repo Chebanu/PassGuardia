@@ -7,13 +7,15 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 - user will be able to store his password securely and receive a unique link to access it
 - user will be able to share his password with other users
 - user is able to restore his password with a unique link received below
-- user will be able to create private and public passwords
+- user will be able to create private, public and shared passwords
 - password owners are able to revoke access to their passwords and change visibility
 - all requests/responses should be audited in a secure way (without showing the password)
 - only signed-in users are able to create passwords
-- private passwords are only visible to the owner and the users he shared it with
+- private passwords are only visible to the owner
+- shared passwords are visible to the owner and users who have access to it
 - public passwords are visible to all users (even unauthorized ones)
 - valid password should be non-empty string and max 100 characters
+- shared password visibility cannot be changed to private or public
 - there are two user roles: `admin` and `user`
 - Admin is able to see audit logs
 - Username length from 5 to 20 characters. English letters, numbers, and underscore are allowed.
@@ -28,19 +30,13 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 - caching layer should be present
 - logging should be present
 
-## Database Structure
-
-- passwords table:
-  - identifier (guid) - primary key
-  - password (string) - encrypted
-
 ## API
 
 ### Create password
 
 - method: `POST`
 - path: `/passwords`
-- body: `{ password: string, visibility: enum { public, private } }`
+- body: `{ password: string, visibility: enum { public, private, shared } }`
 
 #### Password Created
 
@@ -72,7 +68,7 @@ PassGuardia is a HTTP API for password management. With PassGuardia you can stor
 
 - method: `PUT`
 - path: `/passwords/{passwordId}`
-- body: `{ visibility: enum { public, private } }`
+- body: `{ visibility: enum { public, private, shared }, sharedWith: string[] }`
 
 #### Password Updated
 
