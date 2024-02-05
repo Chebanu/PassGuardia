@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using PassGuardia.Contracts.Http;
 using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Algorithm;
 using PassGuardia.Domain.Configuration;
@@ -20,7 +21,7 @@ public class GetPasswordByIdQuery : IRequest<GetPasswordByIdResult>
 public class GetPasswordByIdResult
 {
     public string Password { get; init; }
-    public Visibility GetVisibility { get; init; }
+    public Visibility Visibility { get; init; }
 }
 
 public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQuery, GetPasswordByIdResult>
@@ -42,20 +43,29 @@ public class GetPasswordByIdQueryHandler : BaseRequestHandler<GetPasswordByIdQue
     {
         var dbPassword = await _repository.GetPasswordById(request.Id, cancellationToken);
 
-        if (dbPassword == null ||
-            !(dbPassword.CreatedBy == request.User ||
-            (dbPassword.GetVisibility == Visibility.Public &&
-            dbPassword.CreatedBy != request.User)))
+        if (dbPassword == null)
+        {
+            return new GetPasswordByIdResult
+            {
+                Password = null 
+            };
+        }
+
+        if (!(dbPassword.CreatedBy == request.User ||
+            (dbPassword.Visibility == Visibility.Public && dbPassword.CreatedBy != request.User) ||
+            (dbPassword.Visibility == Visibility.Shared && dbPassword.ShareableList.Contains(request.User))))
         {
             return new GetPasswordByIdResult { Password = null };
         }
 
         var password = _encryptor.Decrypt(dbPassword.EncryptedPassword, _options.CurrentValue.EncryptionKey);
 
+        var passwordResult = new PasswordDomainResponse { Password = password, Visibility = dbPassword.Visibility };
+
         return new GetPasswordByIdResult
         {
             Password = password,
-            GetVisibility = dbPassword.GetVisibility
+            Visibility = dbPassword.Visibility
         };
     }
 }
