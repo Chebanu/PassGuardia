@@ -1,6 +1,7 @@
 ﻿using Flurl.Http;
 
 using PassGuardia.Contracts.Http;
+using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Queries;
 
@@ -8,10 +9,10 @@ namespace PassGuardia.IntegrationTest;
 
 internal interface IApiClient : IDisposable
 {
-    Task<CreatePasswordResult> CreatePassword(PasswordRequest passwordRequest, string token);
-    Task<GetPasswordByIdResult> GetPassword(string passwordId);
-    Task<GetPasswordByIdResult> GetPassword(string passwordId, string token);
-    Task UpdatePasswordVisibility(UpdatePasswordVisibilityRequest updPasswordVisibility, string token);
+    Task<CreatePasswordResponse> CreatePassword(PasswordRequest passwordRequest, string token);
+    Task<PasswordResponse> GetPassword(string passwordId);
+    Task<PasswordResponse> GetPassword(string passwordId, string token);
+    Task UpdatePassword(string passwordId, UpdatePasswordRequest updPasswordVisibility, string token);
     Task<RegisterUserResponse> RegisterUser(RegisterUserRequest registerUserRequest);
     Task<AuthenticateUserResponse> AuthenticateUser(AuthenticateUserRequest authenticateUserRequest);
     Task<MeResponse> Me(string token);
@@ -50,7 +51,7 @@ internal class ApiClient : IApiClient
             .ReceiveJson<AuthenticateUserResponse>();
     }
 
-    public Task<CreatePasswordResult> CreatePassword(PasswordRequest passwordRequest, string token)
+    public Task<CreatePasswordResponse> CreatePassword(PasswordRequest passwordRequest, string token)
     {
         return _client
             .Request()
@@ -58,7 +59,7 @@ internal class ApiClient : IApiClient
             .WithOAuthBearerToken(token)
             .AllowHttpStatus(204)
             .PostJsonAsync(passwordRequest)
-            .ReceiveJson<CreatePasswordResult>();
+            .ReceiveJson<CreatePasswordResponse>();
     }
 
     public void Dispose()
@@ -76,17 +77,17 @@ internal class ApiClient : IApiClient
             .GetJsonAsync<GetAuditLogResult>();
     }
 
-    public Task<GetPasswordByIdResult> GetPassword(string passwordId)
+    public Task<PasswordResponse> GetPassword(string passwordId)
     {
         return _client
             .Request()
             .AppendPathSegment("passwords")
             .AppendPathSegment(passwordId)
             .AllowHttpStatus(200)
-            .GetJsonAsync<GetPasswordByIdResult>();
+            .GetJsonAsync<PasswordResponse>();
     }
 
-    public Task<GetPasswordByIdResult> GetPassword(string passwordId, string token)
+    public Task<PasswordResponse> GetPassword(string passwordId, string token)
     {
         return _client
             .Request()
@@ -94,14 +95,14 @@ internal class ApiClient : IApiClient
             .AppendPathSegment(passwordId)
             .WithOAuthBearerToken(token)
             .AllowHttpStatus(200)
-            .GetJsonAsync<GetPasswordByIdResult>();
+            .GetJsonAsync<PasswordResponse>();
     }
-    public Task UpdatePasswordVisibility(UpdatePasswordVisibilityRequest updPasswordVisibility,
-                                                                           string token)
+    public Task UpdatePassword(string passwordId, UpdatePasswordRequest updPasswordVisibility, string token)
     {
         return _client
             .Request()
             .AppendPathSegment("passwords")
+            .AppendPathSegment(passwordId)
             .WithOAuthBearerToken(token)
             .AllowHttpStatus(204)
             .PutJsonAsync(updPasswordVisibility);

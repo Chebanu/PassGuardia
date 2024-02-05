@@ -7,8 +7,6 @@ using PassGuardia.Contracts.Http;
 using PassGuardia.Domain.Constants;
 using PassGuardia.IntegrationTest;
 
-using Xunit;
-
 internal class UserInfo
 {
     public string Id { get; init; }

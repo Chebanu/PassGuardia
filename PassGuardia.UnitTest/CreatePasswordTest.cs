@@ -4,6 +4,7 @@ using FluentAssertions;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -22,13 +23,28 @@ public class CreatePasswordTest
     private readonly Mock<IPasswordRepository> _repositoryMock = new();
     private readonly Mock<IEncryptor> _encryptorMock = new();
     private readonly Mock<IOptionsMonitor<PassGuardiaConfig>> _optionMock = new();
+    private readonly Mock<UserManager<IdentityUser>> _userMock = new();
 
     private readonly IRequestHandler<CreatePasswordCommand, CreatePasswordResult> _handlerCreator;
 
     public CreatePasswordTest()
     {
-        _handlerCreator = new CreatePasswordCommandHandler(_repositoryMock.Object, _encryptorMock.Object, _optionMock.Object, Mock.Of<ILogger<CreatePasswordCommandHandler>>());
-    }
+        _userMock = new Mock<UserManager<IdentityUser>>(Mock.Of<IUserStore<IdentityUser>>(),
+                                                        Mock.Of<IOptions<IdentityOptions>>(),
+                                                        Mock.Of<IPasswordHasher<IdentityUser>>(),
+                                                        Array.Empty<IUserValidator<IdentityUser>>(),
+                                                        Array.Empty<IPasswordValidator<IdentityUser>>(),
+                                                        Mock.Of<ILookupNormalizer>(),
+                                                        Mock.Of<IdentityErrorDescriber>(),
+                                                        Mock.Of<IServiceProvider>(),
+                                                        Mock.Of<ILogger<UserManager<IdentityUser>>>());
+
+        _handlerCreator = new CreatePasswordCommandHandler(_repositoryMock.Object,
+                                                        _encryptorMock.Object,
+                                                        _optionMock.Object,
+                                                        _userMock.Object,
+                                                        Mock.Of<ILogger<CreatePasswordCommandHandler>>());
+    }  
 
     #region CreatePasswordTests
     [Fact]

@@ -10,8 +10,6 @@ using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Constants;
 using PassGuardia.Domain.Queries;
 
-using Xunit;
-
 namespace PassGuardia.IntegrationTest;
 
 public class AuditTests : Base
@@ -39,21 +37,24 @@ public class AuditTests : Base
     [InlineData("invalid-guid-format")]
     public async Task AuditLogGetShouldReturnBadRequest(string id)
     {
-        var admin = await CreateTestRole(Roles.Admin);
-
         try
         {
+            var admin = await CreateTestRole(Roles.Admin);
+
             await _apiClient.GetPassword(id);
+
+            var audit = await GetAudit(admin.Token);
+
             Assert.Fail("Should have thrown FlurtException");
         }
-        catch (FlurlHttpException)
+        catch (FlurlHttpException ex)
         {
-            // ignore
+            ex.Call.Response.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+
+            var result = await ex.GetResponseJsonAsync<ErrorResponse>();
+
+            result.Errors.Should().NotBeNull();
         }
-
-        var audit = await GetAudit(admin.Token);
-
-        // ToDo: check audit
     }
 
     [Theory]
@@ -112,14 +113,14 @@ public class AuditTests : Base
         meResponse.Roles.Should().BeEquivalentTo([Roles.User]);
     }
 
-    private async Task<CreatePasswordResult> CreateUserAndUsersPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
+    private async Task<CreatePasswordResponse> CreateUserAndUsersPassword(string password, string role = Roles.User, Visibility visibility = Visibility.Private)
     {
         var user = await CreateTestRole(role);
 
         return await _apiClient.CreatePassword(new PasswordRequest
         {
             Password = password,
-            GetVisibility = visibility
+            Visibility = visibility
         }, user.Token);
     }
 
@@ -136,11 +137,14 @@ public class AuditTests : Base
         return audits.Audits.FirstOrDefault();
     }
 
-    private static void AuditShouldBe(Audit audit, HttpStatusCode httpStatusCode, string requestPath, string requestMethod = "GET")
+    private void AuditShouldBe(Audit audit, HttpStatusCode httpStatusCode, string requestPath, string requestMethod = "GET")
     {
+        var currentLocalTime = DateTime.Now;
+        var auditLocalTime = TimeZoneInfo.ConvertTimeFromUtc(audit.Timestamp, TimeZoneInfo.Local);
+
         audit.StatusCode.Should().Be((int)httpStatusCode);
         audit.RequestPath.Should().Be(requestPath);
-        audit.Timestamp.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+        auditLocalTime.Should().BeCloseTo(currentLocalTime, TimeSpan.FromSeconds(5));
         audit.RequestMethod.Should().Be(requestMethod);
         audit.Exception.Should().BeNull();
     }
