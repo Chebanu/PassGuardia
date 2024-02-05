@@ -23,10 +23,20 @@ public class AuditController : ControllerBase
         _auditValidator = auditValidator;
     }
 
+
+    /// <summary>
+    /// Get Audit Logs
+    /// </summary>
+    /// <param name="pageNumber">Page Number</param>
+    /// <param name="pageSize">Page Size</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
+    /// <response code="403">Forbidden</response>
+    /// <response code="500">Internal server error</response>
     [HttpGet]
     [Route("")]
     [Authorize(Policy = AuthorizePolicies.Admin)]
-    [ProducesResponseType(typeof(ErrorResponse), 400)]
+    [ProducesResponseType(typeof(ErrorResponse), 403)]
     [ProducesResponseType(typeof(ErrorResponse), 500)]
     public async Task<IActionResult> GetAudit(int pageNumber = 1, int pageSize = 100, CancellationToken cancellationToken = default)
     {

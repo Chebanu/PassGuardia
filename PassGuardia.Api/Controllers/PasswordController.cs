@@ -26,11 +26,26 @@ public class PasswordController : ControllerBase
         _updPasswordValidator = updPasswordValidator;
     }
 
+    /// <summary>
+    /// Return decrypted password 
+    /// </summary>
+    /// <param name="id">Password ID</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Decrypted password</returns>
+    /// <remarks>
+    /// GET /passwords/12345678-1234-1234-1234-123456789012
+    /// </remarks>
+    /// <response code="200">Password found</response>
+    /// <response code="400">Password Not Found Or Forbidden To Access</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="500">Internal server error</response>
     [HttpGet]
     [Route("{id}")]
-    [ProducesResponseType(typeof(GetPasswordByIdResult), 200)]
+    [ProducesResponseType(typeof(PasswordResponse), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
+    [ProducesResponseType(typeof(ErrorResponse), 401)]
     [ProducesResponseType(typeof(ErrorResponse), 404)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public async Task<IActionResult> GetPassword([FromRoute] Guid id, CancellationToken cancellationToken = default)
     {
         var username = HttpContext.User.Identity?.Name;
@@ -51,11 +66,34 @@ public class PasswordController : ControllerBase
         return Ok(new PasswordResponse { Password = result.Password, GetVisibility = result.GetVisibility });
     }
 
+    /// <summary>
+    /// Create new password
+    /// </summary>
+    /// <param name="passwordRequest">Create password</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Created password $password/12345678-1234-1234-1234-123456789012</returns>
+    /// <remarks>
+    /// Sample request
+    /// 
+    /// POST /passwords
+    /// {
+    ///     details: "Test Password Details"
+    /// }
+    /// 
+    /// </remarks>
+    /// <response code="201">Password created</response>
+    /// <response code="400">Invalid request</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">Forbidden</response>
+    /// <response code="500">Internal server error</response>
     [HttpPost]
     [Route("")]
     [Authorize]
-    [ProducesResponseType(typeof(CreatePasswordResult), 201)]
+    [ProducesResponseType(typeof(CreatePasswordResponse), 201)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
+    [ProducesResponseType(typeof(ErrorResponse), 401)]
+    [ProducesResponseType(typeof(ErrorResponse), 403)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
     public async Task<IActionResult> CreatePassword([FromBody] PasswordRequest passwordRequest, CancellationToken cancellationToken = default)
     {
         var validationResult = await _passwordValidator.ValidateAsync(passwordRequest, cancellationToken);
@@ -83,12 +121,25 @@ public class PasswordController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Update password
+    /// </summary>
+    /// <param name="id">Password Id</param>
+    /// <param name="updatePassword">Update password request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>No Content</returns>
+    /// <response code="204">Password updated</response>
+    /// <response code="400">Invalid request</response>
+    /// <response code="404">Password not found</response>
+    /// <response code="500">Internal server error</response>
     [HttpPut]
-    [Route("")]
+    [Route("{id}")]
     [Authorize]
-    [ProducesResponseType(typeof(CreatePasswordResult), 200)]
+    [ProducesResponseType(204)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
-    public async Task<IActionResult> UpdatePasswordVisibility([FromBody] UpdatePasswordVisibilityRequest updatePassword,
+    [ProducesResponseType(typeof(ErrorResponse), 404)]
+    [ProducesResponseType(typeof(ErrorResponse), 500)]
+    public async Task<IActionResult> UpdatePassword([FromRoute] Guid id,[FromBody] UpdatePasswordRequest updatePassword,
                                                                         CancellationToken cancellationToken = default)
     {
         var validationResult = await _updPasswordValidator.ValidateAsync(updatePassword, cancellationToken);

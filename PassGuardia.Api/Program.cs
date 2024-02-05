@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 
@@ -30,6 +31,9 @@ builder.Services.AddSwaggerGen(options =>
         Title = "PassGuardia",
         Description = "PassGuardia",
     });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

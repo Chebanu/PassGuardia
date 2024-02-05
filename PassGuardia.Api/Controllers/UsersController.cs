@@ -36,6 +36,25 @@ public class UsersController : ControllerBase
         _adminUpdateUserValidator = adminUpdateUserValidator;
     }
 
+    /// <summary>
+    /// Registers a new user
+    /// </summary>
+    /// <param name="request">Register user request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Registered user ID</returns>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///   POST /api/users
+    ///  {
+    ///     username: "TestUser",
+    ///     password: "TestPassword"
+    ///  }
+    /// 
+    /// </remarks>
+    /// <response code="200">User registered</response>
+    /// <response code="400">Invalid request</response>
+    /// <response code="500">Internal server error</response>
     [HttpPost]
     [Route("")]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
@@ -74,6 +93,25 @@ public class UsersController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Authenticates a user
+    /// </summary>
+    /// <param name="request">Authenticate user request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>JWT Token</returns>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///  POST /api/users/token
+    /// {
+    ///     username: "TestUser",
+    ///     password: "TestPassword"
+    /// }
+    /// 
+    /// </remarks>
+    /// <response code="200">User authenticated</response>
+    /// <response code="400">Invalid request</response>
+    /// <response code="500">Internal server error</response>
     [HttpPost("authenticate")]
     [ProducesResponseType(typeof(AuthenticateUserResponse), 200)]
     [ProducesResponseType(typeof(ErrorResponse), 400)]
@@ -107,6 +145,19 @@ public class UsersController : ControllerBase
             });
     }
 
+    /// <summary>
+    /// Returns the current user
+    /// </summary>
+    /// <returns>Current user</returns>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    /// GET /api/users/me
+    /// 
+    /// </remarks>
+    /// <response code="200">User authenticated</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="500">Internal server error</response>
     [HttpGet("me")]
     [Authorize]
     [ProducesResponseType(typeof(MeResponse), 200)]
@@ -121,6 +172,27 @@ public class UsersController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Updates a user
+    /// </summary>
+    /// <param name="request">Update user request</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>OK</returns>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///  PUT /api/users/admin
+    ///  {
+    ///     username: "TestUser",
+    ///     role: "admin"
+    ///  }
+    /// 
+    /// </remarks>
+    /// <response code="200">User updated</response>
+    /// <response code="400">Invalid request</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">Forbidden</response>
+    /// <response code="500">Internal server error</response>
     [HttpPut("admin")]
     [Authorize(Policy = AuthorizePolicies.Admin)]
     [ProducesResponseType(typeof(ErrorResponse), 401)]
