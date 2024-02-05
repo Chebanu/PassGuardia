@@ -16,15 +16,19 @@ public class Password
 
     [Required]
     [Column("visibility")]
-    public Visibility GetVisibility { get; set; }
+    public Visibility Visibility { get; set; }
 
     [Required]
     [Column("created_by")]
     public string CreatedBy { get; set; }
+
+    [Column("shared_with")]
+    public List<string> ShareableList { get; set; }
 }
 
 public enum Visibility
 {
     Private,
+    Shared,
     Public
 }
