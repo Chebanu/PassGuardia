@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 
+using PassGuardia.Api.Extensions;
 using PassGuardia.Contracts.Http;
 
 namespace PassGuardia.Api.Validator;
@@ -14,6 +15,9 @@ public class PasswordRequestValidator : AbstractValidator<PasswordRequest>
             .Length(1, 100)
             .WithMessage("Your password must be in the 1-100 character range");
 
-        RuleFor(x => x.GetVisibility).NotNull();
+        RuleFor(x => x.Visibility)
+            .NotNull();
+
+        this.RuleForShareableUserList(x => x.ShareableList);
     }
 }
