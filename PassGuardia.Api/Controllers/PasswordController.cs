@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using PassGuardia.Contracts.Http;
+using PassGuardia.Contracts.Models;
 using PassGuardia.Domain.Commands;
 using PassGuardia.Domain.Queries;
 
@@ -16,10 +17,10 @@ public class PasswordController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IValidator<PasswordRequest> _passwordValidator;
-    private readonly IValidator<UpdatePasswordVisibilityRequest> _updPasswordValidator;
+    private readonly IValidator<UpdatePasswordRequest> _updPasswordValidator;
 
     public PasswordController(IMediator mediator, IValidator<PasswordRequest> passwordValidator,
-                                IValidator<UpdatePasswordVisibilityRequest> updPasswordValidator)
+                                IValidator<UpdatePasswordRequest> updPasswordValidator)
     {
         _mediator = mediator;
         _passwordValidator = passwordValidator;
@@ -58,12 +59,12 @@ public class PasswordController : ControllerBase
 
         var result = await _mediator.Send(query, cancellationToken);
 
-        if (result?.Password == null)
+        if (result.Password == null)
         {
             return BadRequest(new ErrorResponse { Errors = new[] { $"Password Not Found Or Forbidden To Access" } });
         }
 
-        return Ok(new PasswordResponse { Password = result.Password, GetVisibility = result.GetVisibility });
+        return Ok(new PasswordResponse { Password = result.Password, Visibility = result.Visibility });
     }
 
     /// <summary>
@@ -106,19 +107,47 @@ public class PasswordController : ControllerBase
             });
         }
 
+        if (passwordRequest.Visibility == Visibility.Shared &&
+            passwordRequest.ShareableList == null)
+        {
+            return BadRequest(new ErrorResponse
+            {
+                Errors = ["With 'Shared' visibility the shared list should not be empty"]
+            });
+        }
+
+        if (passwordRequest.ShareableList != null)
+        {
+            if (passwordRequest.Visibility != Visibility.Shared)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = ["You have to pick 'Shared' visibility to share with the others"]
+                });
+            }
+        }
+
         CreatePasswordCommand command = new()
         {
             User = User.Identity.Name,
             Password = passwordRequest.Password,
-            GetVisibility = passwordRequest.GetVisibility
+            Visibility = passwordRequest.Visibility,
+            ShareableList = passwordRequest.ShareableList
         };
 
         CreatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);
 
-        return Created($"passwords/{passwordResult.PasswordId}", new CreatePasswordResult
-        {
-            PasswordId = passwordResult.PasswordId
-        });
+        return !passwordResult.Success ?
+            BadRequest(new ErrorResponse
+            {
+                Errors = passwordResult.Errors
+            }) :
+            Created($"passwords/{passwordResult.PasswordId}", new CreatePasswordResponse
+            {
+                PasswordId = passwordResult.PasswordId,
+                Success = passwordResult.Success
+
+            });
     }
 
     /// <summary>
@@ -151,19 +180,20 @@ public class PasswordController : ControllerBase
                 Errors = validationResult.Errors.Select(e => e.ErrorMessage).ToArray()
             });
         }
-        UpdatePasswordVisibilityCommand command = new()
+        UpdatePasswordCommand command = new()
         {
+            Id = id,
             User = User.Identity.Name,
-            PasswordVisibility = updatePassword
+            Password = updatePassword
         };
 
-        UpdatePasswordVisibilityResult passwordResult = await _mediator.Send(command, cancellationToken);
+        UpdatePasswordResult passwordResult = await _mediator.Send(command, cancellationToken);
 
         return !passwordResult.Success ?
             BadRequest(new ErrorResponse
             {
                 Errors = passwordResult.Errors
-            })
-            : NoContent();
+            }) :
+            NoContent();
     }
 }
