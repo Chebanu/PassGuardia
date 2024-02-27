@@ -76,29 +76,7 @@ builder.Services
     .AddPolicy(AuthorizePolicies.User, policy => policy.RequireClaim(ClaimTypes.Role, Roles.User));
 
 
-builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        var jwtConfig = builder.Configuration.GetSection("Jwt");
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = true,
-            ValidateIssuer = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtConfig["Issuer"],
-            ValidAudience = jwtConfig["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Secret"])),
-            RoleClaimType = ClaimNames.Role,
-            NameClaimType = JwtRegisteredClaimNames.Name
-        };
-    });
+AuthenticationValidator.AddAuthenticationService(builder.Services, builder.Configuration);
 
 ServiceValidatorConfiguration.AddValidatorConfiguration(builder.Services);
 

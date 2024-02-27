@@ -23,7 +23,7 @@ public class Password
     public string CreatedBy { get; set; }
 
     [Column("shared_with")]
-    public List<string> ShareableList { get; set; }
+    public virtual List<string> ShareableList { get; set; }
 }
 
 public enum Visibility
