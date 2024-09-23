@@ -106,6 +106,8 @@ public class CreatePasswordCommandHandler : BaseRequestHandler<CreatePasswordCom
             ShareableList = request.ShareableList
         };
 
+        
+
         _ = await _repository.CreatePassword(password, cancellationToken);
 
         return new CreatePasswordResult
